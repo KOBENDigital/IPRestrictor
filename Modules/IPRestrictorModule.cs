@@ -58,24 +58,20 @@ namespace Koben.IpRestrictor.Modules
             {
                 throw new ArgumentNullException(nameof(ip));
             }
+            
 
             var whitelistedIps = (IEnumerable<IPAddressRange>)ApplicationContext.Current.ApplicationCache.RuntimeCache.GetCacheItem("iprestrictorconfig", () => GetData());
 
-            if(whitelistedIps.Count() == 0)
+            if(!whitelistedIps.Any())
             {
                 //if there is not whitelisted ips, 127.0.0.1 will be added.
-                whitelistedIps = new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")) };
+                whitelistedIps = new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")),
+                                                        new IPAddressRange(IPAddress.Parse("0.0.0.1"))};
             }
 
-            var foundIp = whitelistedIps.FirstOrDefault(config => config.Contains(ip));
+            return whitelistedIps.Any(config => config.Contains(ip.MapToIPv4()));
 
-            if (foundIp != null)
-            {
-                //Ip is allowed to connect
-                return true;
-            }
-
-            return false;
+            
         }
 
         /// <summary>
