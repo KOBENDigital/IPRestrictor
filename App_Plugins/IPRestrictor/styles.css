@@ -1,0 +1,13 @@
+﻿table.ip-listing {
+    margin: 1em 0;
+    border: 1px solid #ddd;
+}
+
+
+    table.ip-listing td, table.ip-listing th {
+        padding: 0.5em 1em;
+    }
+
+form[name="addSetting"] input{
+    margin: 0.5em 1em;
+}
