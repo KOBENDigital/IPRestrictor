@@ -20,6 +20,9 @@ namespace Koben.IpRestrictor.Models
         [JsonProperty(PropertyName = "toIp")]
         public string ToIp { get; set; }
 
+
+        public IpConfigData() { }
+
         public IpConfigData(string alias, string fromIpStr, string toIpStr)
         {
             if (string.IsNullOrWhiteSpace(alias))
@@ -55,6 +58,6 @@ namespace Koben.IpRestrictor.Models
             ToIp = toIpStr;
 
         }
-        
+
     }
 }

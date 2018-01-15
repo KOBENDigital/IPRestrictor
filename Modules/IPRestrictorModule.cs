@@ -58,20 +58,19 @@ namespace Koben.IpRestrictor.Modules
             {
                 throw new ArgumentNullException(nameof(ip));
             }
-            
 
-            var whitelistedIps = (IEnumerable<IPAddressRange>)ApplicationContext.Current.ApplicationCache.RuntimeCache.GetCacheItem("iprestrictorconfig", () => GetData());
 
-            if(!whitelistedIps.Any())
-            {
-                //if there is not whitelisted ips, 127.0.0.1 will be added.
-                whitelistedIps = new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")),
-                                                        new IPAddressRange(IPAddress.Parse("0.0.0.1"))};
-            }
+            var whitelistedIps = new List<IPAddressRange>((IEnumerable<IPAddressRange>)ApplicationContext.Current.ApplicationCache.RuntimeCache.GetCacheItem("iprestrictorconfig", () => GetData()));
+
+
+            //We add localhost to the whitelist
+            whitelistedIps.AddRange(new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")),
+                                                        new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
+
 
             return whitelistedIps.Any(config => config.Contains(ip.MapToIPv4()));
 
-            
+
         }
 
         /// <summary>

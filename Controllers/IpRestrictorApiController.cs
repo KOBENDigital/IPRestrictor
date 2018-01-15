@@ -22,11 +22,17 @@ namespace Koben.IpRestrictor.Controllers
         }
 
         [HttpPost]
-        public async void SaveData([FromBody]IEnumerable<IpConfigData> data)
+        public async Task<IHttpActionResult> SaveData([FromBody]IEnumerable<IpConfigData> data)
         {
-            if (data == null || data.Count().Equals(0)) return;
-
-            await configService.SaveConfigAsync(data);
+            try
+            {
+                await configService.SaveConfigAsync(data);
+            }
+            catch
+            {
+                return InternalServerError();
+            }
+            return Ok();
         }
 
         [HttpGet]
