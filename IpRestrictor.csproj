@@ -218,7 +218,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IPConfigService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Plugins\IPRestrictor\data\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\IPRestrictor\settings.controller.js" />
     <Content Include="App_Plugins\IPRestrictor\settings.html" />
