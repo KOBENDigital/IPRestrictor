@@ -1,34 +1,0 @@
-
--------------------------------------------------------------------------------
-   ROBOCOPY     ::     Robust File Copy for Windows                              
--------------------------------------------------------------------------------
-
-  Started : Sunday, December 31, 2017 09:53:31
-   Source : C:\Users\mario\Source\Repos\IpRestrictorPackage\Package\bin\
-     Dest : C:\Users\mario\Source\Repos\IpRestrictorPackage\Package\App_Data\NuGetBackup\20171231-095331\bin\
-
-    Files : *.*
-	    
-  Options : *.* /S /E /DCOPY:DA /COPY:DAT /R:1000000 /W:30 
-
-------------------------------------------------------------------------------
-
-	                   0	C:\Users\mario\Source\Repos\IpRestrictorPackage\Package\bin\
-	  New Dir          2	C:\Users\mario\Source\Repos\IpRestrictorPackage\Package\bin\Debug\
-	    New File  		    4096	Package.dll  0%  100%  
-	    New File  		    7680	Package.pdb  0%  100%  
-	  New Dir          0	C:\Users\mario\Source\Repos\IpRestrictorPackage\Package\bin\Release\
-
-------------------------------------------------------------------------------
-
-               Total    Copied   Skipped  Mismatch    FAILED    Extras
-    Dirs :         3         2         1         0         0         0
-   Files :         2         2         0         0         0         0
-   Bytes :    11.5 k    11.5 k         0         0         0         0
-   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
-
-
-   Speed :             2355200 Bytes/sec.
-   Speed :             134.765 MegaBytes/min.
-   Ended : Sunday, December 31, 2017 09:53:31
-
