@@ -21,6 +21,12 @@
                     <th></th>
                 </tr>
             </thead>
+            <tr>
+                <td>localhost</td>
+                <td>127.0.0.1</td>
+                <td>127.0.0.1</td>
+                <td></td>
+            </tr>
             <tr ng-repeat="(index, entry) in vm.list">
                 <td>{{entry.alias}}</td>
                 <td>{{entry.fromIp}}</td>
@@ -31,6 +37,7 @@
         <form name="addnewipform" ng-submit="vm.addIp(vm.newip)">
             <fieldset>
                 <legend>Add IP to whitelist</legend>
+                <small>Please enter only IPv4 addresses</small>
                 <label><b>Alias: </b> </label>
                 <input type="text" ng-model="vm.newip.alias" required />
 

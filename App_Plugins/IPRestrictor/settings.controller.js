@@ -1,4 +1,4 @@
-﻿angular.module("umbraco").controller("koben.ipRestrictor.settingsController", ['ipRestrictorDataService', 'umbRequestHelper', function (ipRestrictorDataService, umbRequestHelper) {
+﻿angular.module("umbraco").controller("koben.ipRestrictor.settingsController", ['ipRestrictorDataService', 'umbRequestHelper', 'notificationsService', function (ipRestrictorDataService, umbRequestHelper,  notificationsService) {
     var vm = this;
     vm.savingState = 'init';
     vm.newip = new ipConfigElement();
@@ -21,9 +21,11 @@
         vm.savingState = 'busy';
         umbRequestHelper.resourcePromise(ipRestrictorDataService.saveData(vm.list), "Error saving data. Check Umbraco logs for more information.")
             .then(function (response) {
-                vm.savingState = 'success';                
+                vm.savingState = 'success'; 
+                notificationsService.success("Saved", "Configuration saved.");
             }, function () {
                 vm.savingState = 'error';
+                notificationsService.error("Error", "There was an error saving the configuration.");
             }
 
         );
@@ -38,7 +40,7 @@
     function getConfig() {
         umbRequestHelper.resourcePromise(ipRestrictorDataService.loadData(), "Error retrieving data.")
             .then(function (response) {
-                vm.list = response;
+                vm.list = response;                
             });
     }
 

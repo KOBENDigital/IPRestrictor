@@ -19,24 +19,16 @@ namespace Koben.IpRestrictor.Services
         public async Task SaveConfigAsync(IEnumerable<IConfigData> data)
         {
             var physicalPath = HostingEnvironment.MapPath(configPath);
+            var lines = new List<string>();
+            foreach (IpConfigData item in data)
+            {
+                var line = item.Alias + " " + item.FromIp + " " + item.ToIp;
+                lines.Add(line);
+            }
 
             try
             {
-                using (StreamWriter outputFile = File.AppendText(physicalPath))
-                {
-                    foreach (IpConfigData item in data)
-                    {
-                        var line = item.Alias + " " + item.FromIp + " " + item.ToIp;
-                        try
-                        {
-                            await outputFile.WriteLineAsync(line);
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new IOException("Error writing config file.", ex);
-                        }
-                    }
-                }
+                await Task.Run(() => File.WriteAllLines(physicalPath, lines));
             }
             catch (DirectoryNotFoundException ex)
             {
@@ -44,7 +36,7 @@ namespace Koben.IpRestrictor.Services
             }
             catch (Exception ex)
             {
-                throw new IOException("Error writing config file.", ex);
+                throw new Exception("Error writing config file.", ex);
             }
 
             ApplicationContext.Current.ApplicationCache.RuntimeCache.ClearCacheItem("iprestrictorconfig");
