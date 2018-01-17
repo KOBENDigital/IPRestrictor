@@ -15,10 +15,15 @@ namespace Koben.IpRestrictor.Services
 {
     public class IPConfigService : IConfigService
     {
-        private readonly string configPath = "~/App_Plugins/IPRestrictor/data/ips.data";
+        private readonly string configPath = "~/App_Plugins/IPRestrictor/data";
         public async Task SaveConfigAsync(IEnumerable<IConfigData> data)
         {
-            var physicalPath = HostingEnvironment.MapPath(configPath);
+            var physicalPath = Path.Combine(HostingEnvironment.MapPath(configPath), "ips.data");
+
+            System.IO.FileInfo file = new System.IO.FileInfo(physicalPath);
+            file.Directory.Create(); // If the directory already exists, this method does nothing.
+
+
             var lines = new List<string>();
             foreach (IpConfigData item in data)
             {
@@ -28,7 +33,7 @@ namespace Koben.IpRestrictor.Services
 
             try
             {
-                await Task.Run(() => File.WriteAllLines(physicalPath, lines));
+                await Task.Run(() => File.WriteAllLines(file.FullName, lines));
             }
             catch (DirectoryNotFoundException ex)
             {
