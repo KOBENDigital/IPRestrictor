@@ -15,5 +15,11 @@ To add a new ip just use the provided form. You can enter a range of addresses o
 
 Don't forget to click 'Save' when you are happy with your whitelist.
 
+
+<img src="https://raw.githubusercontent.com/KOBENDigital/IPRestrictor/master/docs/settings-screen.png" width="300" alt="Add package" >
+
+
+
+
 ### Limitations
 Currently only working for IPv4

@@ -219,7 +219,6 @@
     <Compile Include="Services\IPConfigService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Plugins\IPRestrictor\data\" />
     <Folder Include="docs\" />
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +228,7 @@
     <None Include="app.config" />
     <Content Include="App_Plugins\IPRestrictor\package.manifest" />
     <None Include="packages.config" />
+    <None Include="publish-nuget.bat" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

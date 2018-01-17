@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>IpRestrictor</title>
+    <authors>Mario Lopez</authors>
+    <owners>Mario Lopez</owners>
+    <licenseUrl>https://github.com/KOBENDigital/IPRestrictor/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/KOBENDigital/IPRestrictor</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/KOBENDigital/IPRestrictor/master/docs/koben_logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Umbraco package that allows to restric ip-based access to the backoffice.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Umbraco restrict backoffice ip access</tags>
+    
+  </metadata>
+</package>
