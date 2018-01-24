@@ -26,6 +26,7 @@ namespace Koben.IpRestrictor.Controllers
         {
             try
             {
+
                 await configService.SaveConfigAsync(data);
             }
             catch

@@ -40,6 +40,9 @@ namespace Koben.IpRestrictor.Models
                 throw new ArgumentException("toIpStr cannot empty", nameof(toIpStr));
             }
 
+            //remove all spaces
+            alias = alias.Replace(" ", "");
+
             IPAddress fromIp;
             IPAddress toIp;
 

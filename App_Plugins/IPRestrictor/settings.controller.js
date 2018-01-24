@@ -6,7 +6,6 @@
 
     vm.addIp = function (ip) {
         vm.list.push(ip);
-        vm.addnewipform.$setPristine(true)
     }
 
     vm.removeIp = function (index) {
