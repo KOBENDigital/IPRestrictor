@@ -15,12 +15,20 @@ namespace Koben.IpRestrictor.Services
 {
     public class IPConfigService : IConfigService
     {
-        private readonly string configPath = "~/App_Plugins/IPRestrictor/data";
-        public async Task SaveConfigAsync(IEnumerable<IConfigData> data)
-        {
-            var physicalPath = Path.Combine(HostingEnvironment.MapPath(configPath), "ips.data");
+        private readonly string configFolderPath = "~/App_Plugins/IPRestrictor/data";
+        private readonly string filename = "ips.data";
+        private readonly string filePath;
 
-            System.IO.FileInfo file = new System.IO.FileInfo(physicalPath);
+
+
+        public IPConfigService()
+        {
+            filePath = Path.Combine(HostingEnvironment.MapPath(configFolderPath), filename);
+        }
+
+        public async Task SaveConfigAsync(IEnumerable<IConfigData> data)
+        {            
+            System.IO.FileInfo file = new System.IO.FileInfo(filePath);
             file.Directory.Create(); // If the directory already exists, this method does nothing.
 
 
@@ -61,16 +69,15 @@ namespace Koben.IpRestrictor.Services
         /// <returns></returns>
         public async Task<IEnumerable<IConfigData>> LoadConfigAsync()
         {
+            
 
-            var physicalPath = HostingEnvironment.MapPath(configPath);
-
-            if (!File.Exists(physicalPath)) return Enumerable.Empty<IpConfigData>();
+            if (!File.Exists(filePath)) return Enumerable.Empty<IpConfigData>();
 
             var lines = new List<IpConfigData>();
 
             try
             {
-                using (StreamReader inputFile = new StreamReader(physicalPath))
+                using (StreamReader inputFile = new StreamReader(filePath))
                 {
                     string line;
                     int lineNo = 1;
