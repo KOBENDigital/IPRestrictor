@@ -1,18 +1,23 @@
 ﻿<h3 class="bold">IP Restrictor settings</h3>
 <div class="umb-editor-container">
-    <div ng-controller="koben.ipRestrictor.settingsController as vm">
-        <form name="addnewipform" ng-submit="vm.addIp(vm.newip)">
+    <div ng-controller="koben.ipRestrictor.settingsController">
+        <form name="addnewipform" ng-submit="addIp(newip)">
             <fieldset>
                 <legend>Add IP to whitelist</legend>
-                <small>Please enter only IPv4 addresses</small>
-                <label><b>Alias: </b> </label>
-                <input type="text" ng-model="vm.newip.alias" required />
+                <div>
+                    <p><small>Please enter only IPv4 addresses</small></p>
+                    <label><b>Alias <small>(no spaces allowed)</small>: </b> </label>
+                    <input name="alias" type="text" ng-model="newip.alias" ng-change="newip.alias = newip.alias.replace(' ','')" required />
+                </div>
+                <div>
+                    <label><b>From IP: </b></label>
+                    <input name="fromip" type="text" ng-model="newip.fromIp" ng-change="newip.toIp = newip.fromIp" placeholder="xxx.xxx.xxx.xxx" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required />
+                </div>
 
-                <label><b>From IP: </b></label>
-                <input type="text" ng-model="vm.newip.fromIp" ng-change="vm.newip.toIp = vm.newip.fromIp" placeholder="xxx.xxx.xxx.xxx" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required />
-
-                <label><b>To IP: </b></label>
-                <input type="text" ng-model="vm.newip.toIp" placeholder="xxx.xxx.xxx.xxx" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required />
+                <div>
+                    <label><b>To IP: </b></label>
+                    <input name="toip" type="text" ng-model="newip.toIp" placeholder="xxx.xxx.xxx.xxx" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required />
+                </div>
                 <umb-button label="Add"
                             type="submit"
                             button-style="success">
@@ -48,17 +53,17 @@
                 <td>127.0.0.1</td>
                 <td></td>
             </tr>
-            <tr ng-repeat="(index, entry) in vm.list">
+            <tr ng-repeat="(index, entry) in list">
                 <td>{{entry.alias}}</td>
                 <td>{{entry.fromIp}}</td>
                 <td>{{entry.toIp}}</td>
-                <td><button ng-click="vm.removeIp(index)" class="icon-trash"></button></td>
+                <td><button ng-click="removeIp(index)" class="icon-trash"></button></td>
             </tr>
         </table>
 
         <div class="umb-editor-footer">
-            <umb-button action="vm.save()"
-                        state="vm.savingState"
+            <umb-button action="save()"
+                        state="savingState"
                         label="Save"
                         type="button"
                         button-style="success"

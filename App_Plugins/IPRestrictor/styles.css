@@ -8,6 +8,10 @@
         padding: 0.5em 1em;
     }
 
-form[name="addSetting"] input{
+form[name="addnewipform"] input {
     margin: 0.5em 1em;
+}
+
+form[name="addnewipform"] label small {
+    display: inline;
 }
