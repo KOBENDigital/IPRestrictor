@@ -13,7 +13,9 @@
     <description>$description$</description>
     <releaseNotes>Umbraco package that allows to restric ip-based access to the backoffice.</releaseNotes>
     <copyright>Copyright 2018</copyright>
-    <tags>Umbraco restrict backoffice ip access</tags>
-    
+    <tags>Umbraco restrict backoffice ip access</tags>   
   </metadata>
+  <files>
+    <file src="config\Dashboard.config.transform" target="content\config\Dashboard.config.transform" />
+  </files>
 </package>

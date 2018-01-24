@@ -1,0 +1,12 @@
+﻿  <dashBoard>
+  <section alias="IpRestrictor">
+    <areas>
+      <area>settings</area>
+    </areas>
+    <tab caption="Restrict Backoffice access">
+      <control>
+        ~/app_plugins/iprestrictor/settings.html
+      </control>
+    </tab>
+  </section>
+</dashBoard>
