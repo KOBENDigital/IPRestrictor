@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Koben.IpRestrictor.Interfaces;
 using Newtonsoft.Json;
+using TinyCsvParser.Mapping;
 
 namespace Koben.IpRestrictor.Models
 {
@@ -62,5 +63,15 @@ namespace Koben.IpRestrictor.Models
 
         }
 
+    }
+
+    internal class CsvIpConfigDataMapping : CsvMapping<IpConfigData>
+    {
+        public CsvIpConfigDataMapping() : base()
+        {
+            MapProperty(0, c => c.Alias);
+            MapProperty(1, c => c.FromIp);
+            MapProperty(2, c => c.ToIp);
+        }
     }
 }

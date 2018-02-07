@@ -188,6 +188,9 @@
     <Reference Include="TidyNet, Version=1.0.0.0, Culture=neutral">
       <HintPath>..\packages\UmbracoCms.Core.7.7.8\lib\net45\TidyNet.dll</HintPath>
     </Reference>
+    <Reference Include="TinyCsvParser, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TinyCsvParser.2.0.0\lib\net45\TinyCsvParser.dll</HintPath>
+    </Reference>
     <Reference Include="umbraco, Version=1.0.6582.14892, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\UmbracoCms.Core.7.7.8\lib\net45\umbraco.dll</HintPath>
     </Reference>
@@ -241,4 +244,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /s /y "$(ProjectDir)App_Plugins\*" "$(SolutionDir)WebApplication1\App_Plugins\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

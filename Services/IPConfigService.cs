@@ -8,6 +8,9 @@ using System.Web;
 using System.Web.Hosting;
 using Koben.IpRestrictor.Interfaces;
 using Koben.IpRestrictor.Models;
+
+using TinyCsvParser;
+using TinyCsvParser.Tokenizer.RFC4180;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 
@@ -27,21 +30,25 @@ namespace Koben.IpRestrictor.Services
         }
 
         public async Task SaveConfigAsync(IEnumerable<IConfigData> data)
-        {            
+        {
             System.IO.FileInfo file = new System.IO.FileInfo(filePath);
             file.Directory.Create(); // If the directory already exists, this method does nothing.
 
 
-            var lines = new List<string>();
+            var lines = new StringBuilder();
+            var header = "alias,fromIp,toIp";
+
+            lines.AppendLine(header);
+
             foreach (IpConfigData item in data)
             {
-                var line = item.Alias + " " + item.FromIp + " " + item.ToIp;
-                lines.Add(line);
+                var line = $"\"{item.Alias}\",\"{item.FromIp}\",\"{item.ToIp}\"";
+                lines.AppendLine(line);
             }
 
             try
             {
-                await Task.Run(() => File.WriteAllLines(file.FullName, lines));
+                await Task.Run(() => File.WriteAllText(file.FullName, lines.ToString()));
             }
             catch (DirectoryNotFoundException ex)
             {
@@ -56,20 +63,13 @@ namespace Koben.IpRestrictor.Services
         }
 
 
-        public IEnumerable<IConfigData> LoadConfig()
-        {
-            var config = Task.Run(LoadConfigAsync).Result;
-
-            return config;
-        }
-
         /// <summary>
         /// Gets the data in the configuration file
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<IConfigData>> LoadConfigAsync()
+        public IEnumerable<IConfigData> LoadConfig()
         {
-            
+
 
             if (!File.Exists(filePath)) return Enumerable.Empty<IpConfigData>();
 
@@ -77,33 +77,28 @@ namespace Koben.IpRestrictor.Services
 
             try
             {
-                using (StreamReader inputFile = new StreamReader(filePath))
+                var options = new Options('"', '\\', ',');
+                var tokenizer = new RFC4180Tokenizer(options);
+                CsvParserOptions csvParserOptions = new CsvParserOptions(skipHeader: true, tokenizer: tokenizer);
+                CsvIpConfigDataMapping csvMapper = new CsvIpConfigDataMapping();
+                CsvParser<IpConfigData> csvParser = new CsvParser<IpConfigData>(csvParserOptions, csvMapper);
+
+                var data = csvParser.ReadFromFile(filePath, Encoding.UTF8).ToList();
+
+
+                foreach (var line in data)
                 {
-                    string line;
-                    int lineNo = 1;
 
-                    line = await inputFile.ReadLineAsync();
-                    while (!String.IsNullOrEmpty(line))
+                    if (line.IsValid)
                     {
-                        var dataItem = line.Split(' ');
-                        if (dataItem.Length != 3) throw new FormatException("There is an error in the ips data file. Line " + lineNo + ".");
-
-                        try
-                        {
-                            lines.Add(new IpConfigData(alias: dataItem[0],
-                                                        fromIpStr: dataItem[1],
-                                                        toIpStr: dataItem[2]));
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new InvalidDataException("Parameters passed to create IpConfigData are invalid", ex);
-                        }
-
-                        line = await inputFile.ReadLineAsync();
+                        lines.Add(line.Result);
                     }
+                    else
+                    {
+                        LogHelper.Warn(typeof(IPConfigService), "Error parsing IpRestrictor configuration item.");
+                    }
+
                 }
-
-
             }
             catch (Exception ex)
             {

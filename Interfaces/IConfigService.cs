@@ -9,6 +9,6 @@ namespace Koben.IpRestrictor.Interfaces
     public interface IConfigService
     {
         Task SaveConfigAsync(IEnumerable<IConfigData> data);
-        Task<IEnumerable<IConfigData>> LoadConfigAsync();
+        IEnumerable<IConfigData> LoadConfig();
     }
 }

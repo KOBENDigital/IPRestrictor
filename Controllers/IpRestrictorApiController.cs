@@ -37,9 +37,9 @@ namespace Koben.IpRestrictor.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<IpConfigData>> LoadData()
+        public IEnumerable<IpConfigData> LoadData()
         {
-            var data = await configService.LoadConfigAsync();
+            var data = configService.LoadConfig();
             return data.Cast<IpConfigData>();
         }
     }
