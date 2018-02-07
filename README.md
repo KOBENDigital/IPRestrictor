@@ -29,3 +29,6 @@ When the client ip is forbidden, the system will return a 403 error (forbidden).
 
 ### Limitations
 Currently only working for IPv4
+
+## Releases
+V1.1 - Added CSV parser for better aliases support
