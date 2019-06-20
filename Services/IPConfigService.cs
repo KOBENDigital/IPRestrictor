@@ -71,7 +71,12 @@ namespace Koben.IpRestrictor.Services
         {
 
 
-            if (!File.Exists(filePath)) return Enumerable.Empty<IpConfigData>();
+            if (!File.Exists(filePath))
+            {
+                LogHelper.Warn(typeof(IPConfigService), "Config file couldn't be found.");
+                return Enumerable.Empty<IpConfigData>();
+            }
+
 
             var lines = new List<IpConfigData>();
 
