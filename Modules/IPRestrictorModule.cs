@@ -33,7 +33,7 @@ namespace Koben.IpRestrictor.Modules
             var umbracoPath = ConfigurationManager.AppSettings["umbracoPath"].TrimStart('~');
             var requestedPath = application.Request.Path;
 
-            if (requestedPath == umbracoPath)
+            if (requestedPath.StartsWith(umbracoPath) && !requestedPath.StartsWith($"{umbracoPath}/api"))
             {
                 string hostIp = application.Request.UserHostAddress;
 
