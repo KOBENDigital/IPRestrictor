@@ -33,7 +33,7 @@ namespace Koben.IpRestrictor.Modules
             var umbracoPath = ConfigurationManager.AppSettings["umbracoPath"].TrimStart('~');
             var requestedPath = application.Request.Path;
 
-            if (requestedPath.StartsWith(umbracoPath) && !requestedPath.StartsWith($"{umbracoPath}/api"))
+            if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
             {
                 string hostIp = application.Request.UserHostAddress;
 
@@ -47,9 +47,10 @@ namespace Koben.IpRestrictor.Modules
                     //if we are here is because is a wrong address or isnot whitelisted
                     application.Response.AddHeader("status", "403");
                     application.Response.AddHeader("iprestrictor-attempted-ip", hostIp);
+                    application.Response.Redirect("/page-not-found/",true);
 
                     //we cancel request and return a 403.
-                    application.CompleteRequest();
+                    //application.CompleteRequest();
                 }
             }
 
