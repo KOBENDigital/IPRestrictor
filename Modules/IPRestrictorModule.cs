@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using System.Web;
 using Koben.IpRestrictor.Models;
 using Koben.IpRestrictor.Services;
+using Microsoft.IdentityModel.Logging;
 using NetTools;
-using Umbraco.Core;
-using Umbraco.Core.Logging;
-using Umbraco.Web;
+using Umbraco.Cms.Core;
+using Umbraco.Cms.Core.Logging;
+using Umbraco.Cms.Web;
 
 namespace Koben.IpRestrictor.Modules
 {

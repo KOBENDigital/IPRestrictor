@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Koben.IpRestrictor.Interfaces;
 using Koben.IpRestrictor.Models;
 using Koben.IpRestrictor.Services;
-using Umbraco.Web.Editors;
-using Umbraco.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Umbraco.Cms.Web.Common.Attributes;
+using Umbraco.Cms.Web.Common.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace Koben.IpRestrictor.Controllers
 {
-    [PluginController("KobenIPRestrictor")]
-    public class IpRestrictorController : UmbracoAuthorizedJsonController
-    {
+  [PluginController("KobenIPRestrictor")]
+    public class IpRestrictorController : UmbracoApiController
+	{
         private IConfigService configService;
         public IpRestrictorController()
         {
@@ -22,7 +21,7 @@ namespace Koben.IpRestrictor.Controllers
         }
 
         [HttpPost]
-        public async Task<IHttpActionResult> SaveData([FromBody]IEnumerable<IpConfigData> data)
+        public async Task<IActionResult> SaveData([FromBody]IEnumerable<IpConfigData> data)
         {
             try
             {
@@ -31,8 +30,8 @@ namespace Koben.IpRestrictor.Controllers
             }
             catch
             {
-                return InternalServerError();
-            }
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+			}
             return Ok();
         }
 
