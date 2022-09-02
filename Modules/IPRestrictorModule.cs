@@ -3,108 +3,113 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using Koben.IpRestrictor.Models;
 using Koben.IpRestrictor.Services;
-using Microsoft.IdentityModel.Logging;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using NetTools;
-using Umbraco.Cms.Core;
-using Umbraco.Cms.Core.Logging;
-using Umbraco.Cms.Web;
 
-namespace Koben.IpRestrictor.Modules
+namespace Koben.IpRestrictor.Middleware
 {
-    public class IPRestrictorModule : IHttpModule
-    {
-        public void Dispose()
-        {
-        }
+	public class IPRestrictorMiddleware
+	{
+		private readonly ILogger<IPRestrictorMiddleware> _logger;
+		private readonly RequestDelegate _next;
 
-        public void Init(HttpApplication context)
-        {
-            context.BeginRequest += Context_BeginRequest;
-        }
+		public IPRestrictorMiddleware
+		(
+			ILogger<IPRestrictorMiddleware> logger,
+			RequestDelegate next
+		)
+		{
+			_logger = logger;
+			_next = next;
+		}
 
-        private void Context_BeginRequest(object sender, EventArgs e)
-        {
-            HttpApplication application = (HttpApplication)sender;
+		public async Task Invoke(HttpContext context)
+		{
+			var umbracoPath = ConfigurationManager.AppSettings["umbracoPath"].TrimStart('~');
+			var requestedPath = context.Request.Path.ToString();
 
-            var umbracoPath = ConfigurationManager.AppSettings["umbracoPath"].TrimStart('~');
-            var requestedPath = application.Request.Path;
+			if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
+			{
+				var hostIpAddress = context.Connection.RemoteIpAddress;
 
-            if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
-            {
-                string hostIp = application.Request.UserHostAddress;
+				//We check if the IP adddress is a valid address or is not on the whitelist.
 
-                IPAddress hostIpAddress;
+				if (!IsWhitelistedIp(hostIpAddress))
+				{
+					//if we are here is because is a wrong address or isnot whitelisted
+					context.Response.StatusCode = 403;
+					context.Response.Headers.Add("iprestrictor-attempted-ip", hostIpAddress.ToString());
+					context.Response.Redirect("/page-not-found/", true);
 
-                //We check if the IP adddress is a valid address or is not on the whitelist.
+					//we cancel request and return a 403.
+					//application.CompleteRequest();
+				}
+			}
 
-                if (!IPAddress.TryParse(hostIp, out hostIpAddress) ||
-                    !IsWhitelistedIp(hostIpAddress))
-                {
-                    //if we are here is because is a wrong address or isnot whitelisted
-                    application.Response.AddHeader("status", "403");
-                    application.Response.AddHeader("iprestrictor-attempted-ip", hostIp);
-                    application.Response.Redirect("/page-not-found/",true);
+			await _next.Invoke(context);
+		}
 
-                    //we cancel request and return a 403.
-                    //application.CompleteRequest();
-                }
-            }
-
-        }
-
-        private bool IsWhitelistedIp(IPAddress ip)
-        {
-            if (ip == null)
-            {
-                throw new ArgumentNullException(nameof(ip));
-            }
-
-
-            var whitelistedIps = new List<IPAddressRange>((IEnumerable<IPAddressRange>)ApplicationContext.Current.ApplicationCache.RuntimeCache.GetCacheItem("iprestrictorconfig", () => GetData()));
+		private bool IsWhitelistedIp(IPAddress ip)
+		{
+			if (ip == null)
+			{
+				throw new ArgumentNullException(nameof(ip));
+			}
 
 
-            //We add localhost to the whitelist
-            whitelistedIps.AddRange(new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")),
-                                                        new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
+			var whitelistedIps = new List<IPAddressRange>((IEnumerable<IPAddressRange>)ApplicationContext.Current.ApplicationCache.RuntimeCache.GetCacheItem("iprestrictorconfig", () => GetData()));
 
-            if (whitelistedIps.Any(config => config.Contains(ip.MapToIPv4())))
-            {
-                LogHelper.Info(typeof(IPRestrictorModule), "IP " + ip + " is whitelisted");
-                return true;
-            }
-            else
-            {
-                LogHelper.Info(typeof(IPRestrictorModule), "IP " + ip + " is NOT whitelisted");
-                return false;
-            }
 
-        }
+			//We add localhost to the whitelist
+			whitelistedIps.AddRange(new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")),
+																												new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
 
-        /// <summary>
-        /// Retrieves configuration data from service transforming it to ranges of addresses
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerable<IPAddressRange> GetData()
-        {
-            var service = new IPConfigService();
+			if (whitelistedIps.Any(config => config.Contains(ip.MapToIPv4())))
+			{
+				_logger.LogInformation("IP " + ip + " is whitelisted");
+				return true;
+			}
+			else
+			{
+				_logger.LogInformation("IP " + ip + " is NOT whitelisted");
+				return false;
+			}
 
-            try
-            {
-                var data = service.LoadConfig()
-                  .Cast<IpConfigData>()
-                  .Select(ip => IPAddressRange.Parse(ip.FromIp + "-" + ip.ToIp));
+		}
 
-                return data;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in configuration data.", ex);
-            }
-        }
-    }
+		/// <summary>
+		/// Retrieves configuration data from service transforming it to ranges of addresses
+		/// </summary>
+		/// <returns></returns>
+		private IEnumerable<IPAddressRange> GetData()
+		{
+			var service = new IPConfigService();
+
+			try
+			{
+				var data = service.LoadConfig()
+					.Cast<IpConfigData>()
+					.Select(ip => IPAddressRange.Parse(ip.FromIp + "-" + ip.ToIp));
+
+				return data;
+			}
+			catch (Exception ex)
+			{
+				throw new Exception("Error in configuration data.", ex);
+			}
+		}
+	}
+
+	public static class IPRestrictorMiddlewareExtensions
+	{
+		public static IApplicationBuilder UseMyMiddleware(this IApplicationBuilder builder)
+		{
+			return builder.UseMiddleware<IPRestrictorMiddleware>();
+		}
+	}
 }
