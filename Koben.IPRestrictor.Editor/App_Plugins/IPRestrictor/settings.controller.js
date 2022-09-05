@@ -27,8 +27,8 @@ angular.module("umbraco").controller("koben.ipRestrictor.settingsController", ['
       .then(function (response) {
         $scope.savingState = 'success';
         notificationsService.success("Saved", "Configuration saved.");
-        $scope.addnewipform.$setPristine();
-        $scope.addnewipform.alias.$setPristine();
+        $scope.dashboardForm.$setPristine();
+        $scope.dashboardForm.alias.$setPristine();
       }, function () {
         $scope.savingState = 'error';
         notificationsService.error("Error", "There was an error saving the configuration.");
