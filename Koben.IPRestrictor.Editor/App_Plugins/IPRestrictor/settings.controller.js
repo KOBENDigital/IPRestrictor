@@ -16,7 +16,6 @@ angular.module("umbraco").controller("koben.ipRestrictor.settingsController", ['
     $scope.newip.toValue = $scope.newip.fromValue;
   }
 
-
   $scope.save = function () {
     $scope.savingState = 'busy';
     umbRequestHelper.resourcePromise(ipRestrictorDataService.saveData($scope.list), "Error saving data. Check Umbraco logs for more information.")
@@ -47,5 +46,4 @@ angular.module("umbraco").controller("koben.ipRestrictor.settingsController", ['
   }
 
   getConfig();
-
 }]);
