@@ -1,17 +1,19 @@
-﻿using System;
+﻿using Koben.AppSettings;
+using Koben.IpRestrictor.Interfaces;
+using Koben.IpRestrictor.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Koben.IpRestrictor.Interfaces;
-using Koben.IpRestrictor.Models;
 using Koben.IpRestrictor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NetTools;
+using Koben.AppSettings.Interfaces;
 
 namespace Koben.IpRestrictor.Middleware
 {

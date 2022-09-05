@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "IpRestrictor": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:60774;http://localhost:60775"
+    }
+  }
+}
