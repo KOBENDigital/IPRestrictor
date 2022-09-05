@@ -1,30 +1,23 @@
 <div class="umb-box-content umb-box">
   <h3 class="bold">IP Restrictor settings</h3>
   <div ng-controller="koben.ipRestrictor.settingsController">
-    <form name="addnewipform" ng-submit="addIp(newip)">
-      <fieldset>
-        <legend>Add IP to whitelist</legend>
-        <div>
-          <p><small>Please enter only IPv4 addresses</small></p>
-          <label><b>Alias: </b> </label>
-          <input name="alias" type="text" ng-model="newip.alias" required />
-        </div>
-        <div>
-          <label><b>From IP: </b></label>
-          <input name="fromip" type="text" ng-model="newip.fromIp" ng-change="newip.toIp = newip.fromIp" placeholder="xxx.xxx.xxx.xxx" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required />
-        </div>
-
-        <div>
-          <label><b>To IP: </b></label>
-          <input name="toip" type="text" ng-model="newip.toIp" placeholder="xxx.xxx.xxx.xxx" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required />
-        </div>
-        <umb-button label="Add"
-                    type="submit"
-                    button-style="success"
-                    ng-click="addIp(newip)">
-        </umb-button>
-      </fieldset>
-    </form>
+    <fieldset>
+      <legend>Add IP to whitelist</legend>
+      <p><small>Please enter only IPv4 addresses</small></p>
+      <div class="ip-grid">
+        <label><b>Alias: </b> </label>
+        <input name="alias" type="text" ng-model="newip.alias" required />
+        <label><b>From IP: </b></label>
+        <input name="fromip" type="text" ng-model="newip.fromIp" ng-change="newip.toIp = newip.fromIp" placeholder="xxx.xxx.xxx.xxx" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required />
+        <label><b>To IP: </b></label>
+        <input name="toip" type="text" ng-model="newip.toIp" placeholder="xxx.xxx.xxx.xxx" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" required />
+      </div>
+      <umb-button label="Add"
+                  type="submit"
+                  button-style="success"
+                  ng-click="addIp(newip)">
+      </umb-button>
+    </fieldset>
     <hr />
     <table class="ip-listing">
       <thead>
@@ -60,7 +53,7 @@
       </tr>
     </table>
 
-    <div class="umb-editor-footer">
+    <div>
       <umb-button action="save()"
                   state="savingState"
                   label="Save"

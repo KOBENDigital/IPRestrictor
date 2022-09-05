@@ -15,3 +15,9 @@ form[name="addnewipform"] input {
 form[name="addnewipform"] label small {
   display: inline;
 }
+
+.ip-grid {
+  display: grid;
+  grid-template-columns: 80px 200px;
+  align-items: center;
+}
