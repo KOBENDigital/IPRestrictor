@@ -196,3 +196,4 @@ node_modules/
 /src/.idea/
 
 src/Koben.IPRestrictor.Website/App_Data/cache/
+/Koben.IPRestrictor.Web/App_Plugins
