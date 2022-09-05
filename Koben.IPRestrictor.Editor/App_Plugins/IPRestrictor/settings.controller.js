@@ -4,6 +4,7 @@ angular.module("umbraco").controller("koben.ipRestrictor.settingsController", ['
   $scope.required = true;
 
   $scope.addIp = function (ip) {
+    console.log("addIP");
     $scope.list.push(angular.copy(ip));
     $scope.newip = new ipConfigElement();
   }
@@ -14,6 +15,10 @@ angular.module("umbraco").controller("koben.ipRestrictor.settingsController", ['
 
   $scope.matchToIp = function () {
     $scope.newip.toValue = $scope.newip.fromValue;
+  }
+
+  $scope.logSomething = function () {
+    console.log("log Something");
   }
 
   $scope.save = function () {
@@ -46,4 +51,5 @@ angular.module("umbraco").controller("koben.ipRestrictor.settingsController", ['
   }
 
   getConfig();
+
 }]);
