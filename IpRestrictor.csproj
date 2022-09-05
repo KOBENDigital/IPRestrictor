@@ -2,10 +2,11 @@
 
   <PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<OutputType>Library</OutputType>
 		<RootNamespace>Koben.IpRestrictor</RootNamespace>
 		<AssemblyName>Koben.IpRestrictor</AssemblyName>
-  </PropertyGroup>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
@@ -19,6 +20,7 @@
     <PackageReference Include="Semver" Version="2.2.0" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0" />
     <PackageReference Include="TinyCsvParser" Version="2.7.0" />
+    <PackageReference Include="Umbraco.Cms" Version="10.1.0" />
     <PackageReference Include="Umbraco.Cms.Web.Common" Version="10.1.0" />
   </ItemGroup>
 </Project>

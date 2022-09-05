@@ -4,9 +4,11 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Koben.IpRestrictor.Interfaces;
 using Koben.IpRestrictor.Models;
 using Koben.IpRestrictor.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NetTools;
@@ -17,15 +19,21 @@ namespace Koben.IpRestrictor.Middleware
 	{
 		private readonly ILogger<IPRestrictorMiddleware> _logger;
 		private readonly RequestDelegate _next;
+		private readonly IWebHostEnvironment _webHostEnvironment;
+		private readonly IConfigService _ipConfigService;
 
 		public IPRestrictorMiddleware
 		(
 			ILogger<IPRestrictorMiddleware> logger,
-			RequestDelegate next
+			RequestDelegate next,
+			IWebHostEnvironment webHostEnvironment,
+			IConfigService ipConfigService
 		)
 		{
 			_logger = logger;
 			_next = next;
+			_webHostEnvironment = webHostEnvironment;
+			_ipConfigService = ipConfigService;
 		}
 
 		public async Task Invoke(HttpContext context)
@@ -61,9 +69,8 @@ namespace Koben.IpRestrictor.Middleware
 				throw new ArgumentNullException(nameof(ip));
 			}
 
-
-			var whitelistedIps = new List<IPAddressRange>((IEnumerable<IPAddressRange>)ApplicationContext.Current.ApplicationCache.RuntimeCache.GetCacheItem("iprestrictorconfig", () => GetData()));
-
+			var whitelistedIps = new List<IPAddressRange>();
+			//var whitelistedIps = new List<IPAddressRange>((IEnumerable<IPAddressRange>)ApplicationContext.Current.ApplicationCache.RuntimeCache.GetCacheItem("iprestrictorconfig", () => GetData()));
 
 			//We add localhost to the whitelist
 			whitelistedIps.AddRange(new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")),
@@ -88,11 +95,9 @@ namespace Koben.IpRestrictor.Middleware
 		/// <returns></returns>
 		private IEnumerable<IPAddressRange> GetData()
 		{
-			var service = new IPConfigService();
-
 			try
 			{
-				var data = service.LoadConfig()
+				var data = _ipConfigService.LoadConfig()
 					.Cast<IpConfigData>()
 					.Select(ip => IPAddressRange.Parse(ip.FromIp + "-" + ip.ToIp));
 
