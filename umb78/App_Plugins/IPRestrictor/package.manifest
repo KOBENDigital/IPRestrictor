@@ -1,7 +1,0 @@
-﻿{
-  "javascript": [
-    "~/App_Plugins/IPRestrictor/settings.controller.js",
-    "~/App_Plugins/IPRestrictor/data.service.js"
-  ],
-  "css": [ "~/App_Plugins/IPRestrictor/styles.css" ]
-}

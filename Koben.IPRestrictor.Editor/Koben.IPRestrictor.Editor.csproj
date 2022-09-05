@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Description>Opening hours datatype plugin, based on Jumoo.OpeningSoon, which itself was based on Our.Umbraco.OpeningSoon</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="build\**\*.*">
+			<Pack>true</Pack>
+			<PackagePath>buildTransitive</PackagePath>
+		</None>
+
+		<Content Include="App_Plugins\**\*.*">
+			<Pack>true</Pack>
+			<PackagePath>content\App_Plugins</PackagePath>
+			<Visible>true</Visible>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Koben.IPRestrictor.Core\Koben.IPRestrictor.Core.csproj" />
+	</ItemGroup>
+</Project>
