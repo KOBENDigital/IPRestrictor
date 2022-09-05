@@ -1,6 +1,6 @@
-using Koben.IpRestrictor.Core.Models;
-using Koben.IpRestrictor.Core.Services;
-using Koben.IpRestrictor.Core.Interfaces;
+using Koben.IPRestrictor.Core.Models;
+using Koben.IPRestrictor.Core.Services;
+using Koben.IPRestrictor.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Cms.Web.Common.Controllers;
 
-namespace Koben.IpRestrictor.Core.Controllers
+namespace Koben.IPRestrictor.Core.Controllers
 {
 	[PluginController("KobenIPRestrictor")]
 	public class IpRestrictorController : UmbracoApiController

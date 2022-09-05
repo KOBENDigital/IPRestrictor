@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Koben.IpRestrictor.Core.Interfaces;
-using Koben.IpRestrictor.Core.Models;
+using Koben.IPRestrictor.Core.Interfaces;
+using Koben.IPRestrictor.Core.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TinyCsvParser;
 using TinyCsvParser.Tokenizer.RFC4180;
 
-namespace Koben.IpRestrictor.Core.Services
+namespace Koben.IPRestrictor.Core.Services
 {
 	public class IPConfigService : IConfigService
 	{

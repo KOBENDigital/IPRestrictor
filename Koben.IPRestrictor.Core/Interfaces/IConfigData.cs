@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Koben.IpRestrictor.Core.Interfaces
+namespace Koben.IPRestrictor.Core.Interfaces
 {
 	public interface IConfigData
 	{

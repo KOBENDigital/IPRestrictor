@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Koben.IpRestrictor.Core.Interfaces;
+using Koben.IPRestrictor.Core.Interfaces;
 using Newtonsoft.Json;
 using TinyCsvParser.Mapping;
 
-namespace Koben.IpRestrictor.Core.Models
+namespace Koben.IPRestrictor.Core.Models
 {
 	public class IpConfigData : IConfigData
 	{
