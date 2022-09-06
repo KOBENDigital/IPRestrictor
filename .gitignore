@@ -186,14 +186,8 @@ applicationhost.config
 # ============================
 # Front end - gulp etc
 # ============================
-.sass-cache/
-bower_components/
-node_modules/
-/src/Koben.IPRestrictor.Website.Core/Models/Generated/ood.flag
-/src/BuildPackage/Package/
-!/src/Koben.IPRestrictor.Website/umbraco/Views/prevalueeditors/singlecontenttypepicker.html
-!/src/Koben.IPRestrictor.Website/umbraco/Views/prevalueeditors/singlerequiredcontenttypepicker.html
-/src/.idea/
+BuildPackage/Package/
 
 src/Koben.IPRestrictor.Website/App_Data/cache/
 /Koben.IPRestrictor.Web/App_Plugins
+/BuildPackage

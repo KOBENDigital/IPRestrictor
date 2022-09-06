@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="App_Plugins\IPRestrictor\data.service.js" />
+    <None Remove="App_Plugins\IPRestrictor\lang\en-US.xml" />
+    <None Remove="App_Plugins\IPRestrictor\package.manifest" />
+    <None Remove="App_Plugins\IPRestrictor\settings.controller.js" />
+    <None Remove="App_Plugins\IPRestrictor\settings.html" />
+    <None Remove="App_Plugins\IPRestrictor\styles.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+		<Folder Include="App_Plugins\" />
+  </ItemGroup>
+
+  <ItemGroup>
 		<PackageReference Include="IPAddressRange" Version="4.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
