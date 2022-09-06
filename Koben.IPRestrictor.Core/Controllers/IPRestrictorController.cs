@@ -1,5 +1,5 @@
-using Koben.IPRestrictor.Core.Models;
 using Koben.IPRestrictor.Core.Interfaces;
+using Koben.IPRestrictor.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -34,7 +34,6 @@ namespace Koben.IPRestrictor.Core.Controllers
 		{
 			try
 			{
-
 				await _ipConfigService.SaveConfigAsync(data);
 			}
 			catch

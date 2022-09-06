@@ -6,9 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Koben.IPRestrictor.Core.Interfaces;
 using Koben.IPRestrictor.Core.Models;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using TinyCsvParser;
 using TinyCsvParser.Tokenizer.RFC4180;
 
@@ -16,27 +14,21 @@ namespace Koben.IPRestrictor.Core.Services
 {
 	public class IPConfigService : IConfigService
 	{
-		private readonly string configFolderPath = "~/App_Plugins/IPRestrictor/data";
+		private readonly string configFolderPath = "App_Plugins/IPRestrictor/data";
 		private readonly string filename = "ips.data";
 		private readonly string filePath;
 		private readonly ILogger<IPConfigService> _logger;
-		private readonly IWebHostEnvironment _webHostEnvironment;
 
-		public IPConfigService(ILogger<IPConfigService> logger, IWebHostEnvironment webHostEnvironment)
+		public IPConfigService(ILogger<IPConfigService> logger)
 		{
 			_logger = logger;
-
-			_webHostEnvironment = webHostEnvironment;
-			string webRootPath = _webHostEnvironment.WebRootPath;
-			string contentRootPath = _webHostEnvironment.ContentRootPath;
-			filePath = Path.Combine(webRootPath, filename);
+			filePath = Path.Combine(configFolderPath, filename);
 		}
 
 		public async Task SaveConfigAsync(IEnumerable<IConfigData> data)
 		{
 			System.IO.FileInfo file = new System.IO.FileInfo(filePath);
 			file.Directory.Create(); // If the directory already exists, this method does nothing.
-
 
 			var lines = new StringBuilder();
 			var header = "alias,fromIp,toIp";

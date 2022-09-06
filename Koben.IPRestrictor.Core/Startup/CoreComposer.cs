@@ -8,9 +8,6 @@ namespace Koben.IPRestrictor.Core.Startup
 	{
 		public void Compose(IUmbracoBuilder builder)
 		{
-			var config = builder.Config;
-
-			//koben services
 			builder.Services.AddSingleton<Koben.IPRestrictor.Core.Interfaces.IConfigService, Koben.IPRestrictor.Core.Services.IPConfigService>();
 		}
 	}

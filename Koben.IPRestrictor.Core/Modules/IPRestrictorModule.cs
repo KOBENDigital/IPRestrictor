@@ -1,4 +1,3 @@
-using Koben.AppSettings;
 using Koben.IPRestrictor.Core.Interfaces;
 using Koben.IPRestrictor.Core.Models;
 using System;
@@ -7,13 +6,11 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Koben.IPRestrictor.Core.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NetTools;
-using Koben.AppSettings.Interfaces;
 
 namespace Koben.IPRestrictor.Core.Middleware
 {
