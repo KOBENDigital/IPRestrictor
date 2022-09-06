@@ -2,6 +2,8 @@
 {
 	public class IPRestrictorSettings
 	{
+		public const string IPRestrictorSection = "IPRestrictor";
+
 		internal const bool StaticEnabled = true;
 		internal const string StaticUmbracoPath = "/umbraco";
 

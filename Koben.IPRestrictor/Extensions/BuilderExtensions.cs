@@ -21,7 +21,7 @@ namespace Koben.IPRestrictor.Extensions
 			if (builder.Services.FirstOrDefault(x => x.ServiceType == typeof(IPRestrictorConfigService)) != null)
 				return builder;
 
-			var configSection = builder.Config.GetSection(IPRestrictorSettings.StaticUmbracoPath);
+			var configSection = builder.Config.GetSection(IPRestrictorSettings.IPRestrictorSection);
 			// load up the settings. 
 
 			var options = builder.Services.AddOptions<IPRestrictorSettings>()
