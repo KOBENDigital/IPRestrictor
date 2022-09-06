@@ -1,4 +1,4 @@
-namespace Koben.IPRestrictor.Core.Interfaces
+namespace Koben.IPRestrictor.Interfaces
 {
 	public interface IConfigData
 	{

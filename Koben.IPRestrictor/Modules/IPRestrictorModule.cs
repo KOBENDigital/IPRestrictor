@@ -1,5 +1,5 @@
-using Koben.IPRestrictor.Core.Interfaces;
-using Koben.IPRestrictor.Core.Models;
+using Koben.IPRestrictor.Interfaces;
+using Koben.IPRestrictor.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NetTools;
 
-namespace Koben.IPRestrictor.Core.Middleware
+namespace Koben.IPRestrictor.Middleware
 {
 	public class IPRestrictorMiddleware
 	{

@@ -1,10 +1,10 @@
 using System;
 using System.Net;
-using Koben.IPRestrictor.Core.Interfaces;
+using Koben.IPRestrictor.Interfaces;
 using Newtonsoft.Json;
 using TinyCsvParser.Mapping;
 
-namespace Koben.IPRestrictor.Core.Models
+namespace Koben.IPRestrictor.Models
 {
 	public class IpConfigData : IConfigData
 	{

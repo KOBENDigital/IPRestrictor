@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Koben.IPRestrictor.Core.Interfaces;
-using Koben.IPRestrictor.Core.Models;
+using Koben.IPRestrictor.Interfaces;
+using Koben.IPRestrictor.Models;
 using Microsoft.Extensions.Logging;
 using TinyCsvParser;
 using TinyCsvParser.Tokenizer.RFC4180;
 
-namespace Koben.IPRestrictor.Core.Services
+namespace Koben.IPRestrictor.Services
 {
 	public class IPConfigService : IConfigService
 	{

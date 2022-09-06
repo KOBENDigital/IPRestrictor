@@ -1,5 +1,5 @@
-using Koben.IPRestrictor.Core.Interfaces;
-using Koben.IPRestrictor.Core.Models;
+using Koben.IPRestrictor.Interfaces;
+using Koben.IPRestrictor.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,7 @@ using Umbraco.Cms.Web.BackOffice.Controllers;
 using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Cms.Web.Common.Controllers;
 
-namespace Koben.IPRestrictor.Core.Controllers
+namespace Koben.IPRestrictor.Controllers
 {
 	[PluginController("KobenIPRestrictor")]
 	public class IpRestrictorController : UmbracoAuthorizedJsonController

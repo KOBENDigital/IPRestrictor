@@ -22,7 +22,7 @@
 		<Folder Include="App_Plugins\" />
 	</ItemGroup>
 	<ItemGroup>
-    <ProjectReference Include="..\Koben.IPRestrictor.Core\Koben.IPRestrictor.csproj" />
+    <ProjectReference Include="..\Koben.IPRestrictor\Koben.IPRestrictor.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
