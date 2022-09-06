@@ -1,3 +1,4 @@
+using Koben.IPRestrictor.Config;
 using Koben.IPRestrictor.Interfaces;
 using Koben.IPRestrictor.Models;
 using System;
@@ -6,8 +7,6 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NetTools;
@@ -18,29 +17,29 @@ namespace Koben.IPRestrictor.Middleware
 	{
 		private readonly ILogger<IPRestrictorMiddleware> _logger;
 		private readonly RequestDelegate _next;
-		private readonly IWebHostEnvironment _webHostEnvironment;
 		private readonly IConfigService _ipConfigService;
+		private readonly IPRestrictorConfigService _iPRestrictorConfigService;
 
 		public IPRestrictorMiddleware
 		(
-			ILogger<IPRestrictorMiddleware> logger,
 			RequestDelegate next,
-			IWebHostEnvironment webHostEnvironment,
-			IConfigService ipConfigService
+			ILogger<IPRestrictorMiddleware> logger,
+			IConfigService ipConfigService,
+			IPRestrictorConfigService iPRestrictorConfigService
 		)
 		{
-			_logger = logger;
 			_next = next;
-			_webHostEnvironment = webHostEnvironment;
+			_logger = logger;
 			_ipConfigService = ipConfigService;
+			_iPRestrictorConfigService = iPRestrictorConfigService;
 		}
 
 		public async Task Invoke(HttpContext context)
 		{
-			var umbracoPath = ConfigurationManager.AppSettings["umbracoPath"].TrimStart('~');
+			var umbracoPath = _iPRestrictorConfigService.Settings.UmbracoPath.TrimStart('~');
 			var requestedPath = context.Request.Path.ToString();
 
-			if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
+			if (_iPRestrictorConfigService.Settings.Enabled && requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
 			{
 				var hostIpAddress = context.Connection.RemoteIpAddress;
 
@@ -54,7 +53,7 @@ namespace Koben.IPRestrictor.Middleware
 					context.Response.Redirect("/page-not-found/", true);
 
 					//we cancel request and return a 403.
-					//application.CompleteRequest();
+					return;
 				}
 			}
 
@@ -106,14 +105,6 @@ namespace Koben.IPRestrictor.Middleware
 			{
 				throw new Exception("Error in configuration data.", ex);
 			}
-		}
-	}
-
-	public static class IPRestrictorMiddlewareExtensions
-	{
-		public static IApplicationBuilder UseMyMiddleware(this IApplicationBuilder builder)
-		{
-			return builder.UseMiddleware<IPRestrictorMiddleware>();
 		}
 	}
 }

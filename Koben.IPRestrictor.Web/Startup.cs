@@ -1,3 +1,4 @@
+using Koben.IPRestrictor.Extensions;
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -60,7 +61,8 @@ namespace Koben.IPRestrictor.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseUmbraco()
+			      app.UseIPRestrictor();
+			      app.UseUmbraco()
                 .WithMiddleware(u =>
                 {
                     u.UseBackOffice();
