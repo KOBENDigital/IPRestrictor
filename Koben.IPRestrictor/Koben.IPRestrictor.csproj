@@ -2,20 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <Version>2.0.3-alpha</Version>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="App_Plugins\IPRestrictor\data.service.js" />
-    <None Remove="App_Plugins\IPRestrictor\lang\en-US.xml" />
-    <None Remove="App_Plugins\IPRestrictor\package.manifest" />
-    <None Remove="App_Plugins\IPRestrictor\settings.controller.js" />
-    <None Remove="App_Plugins\IPRestrictor\settings.html" />
-    <None Remove="App_Plugins\IPRestrictor\styles.css" />
-  </ItemGroup>
-
-  <ItemGroup>
-		<Folder Include="App_Plugins\" />
-  </ItemGroup>
 
   <ItemGroup>
 		<PackageReference Include="IPAddressRange" Version="4.2.0" />
@@ -28,8 +16,16 @@
 		<PackageReference Include="Umbraco.Cms.Web.Common" Version="10.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="build\**\*.*">
+			<Pack>true</Pack>
+			<PackagePath>buildTransitive</PackagePath>
+		</None>
 
+		<Content Include="App_Plugins\**\*.*">
+			<Pack>true</Pack>
+			<PackagePath>content\App_Plugins</PackagePath>
+			<Visible>true</Visible>
+		</Content>
+	</ItemGroup>
 </Project>
