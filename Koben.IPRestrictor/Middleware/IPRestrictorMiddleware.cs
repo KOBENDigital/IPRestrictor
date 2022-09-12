@@ -1,15 +1,14 @@
 using Koben.IPRestrictor.Config;
-using Koben.IPRestrictor.Interfaces;
 using Koben.IPRestrictor.Models;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+using Koben.IPRestrictor.Services.IpDataService.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NetTools;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Koben.IPRestrictor.Middleware
 {
@@ -17,20 +16,20 @@ namespace Koben.IPRestrictor.Middleware
 	{
 		private readonly ILogger<IPRestrictorMiddleware> _logger;
 		private readonly RequestDelegate _next;
-		private readonly IConfigService _ipConfigService;
+		private readonly IWhitelistedIpDataService _whitelistedIpDataService;
 		private readonly IPRestrictorConfigService _iPRestrictorConfigService;
 
 		public IPRestrictorMiddleware
 		(
 			RequestDelegate next,
 			ILogger<IPRestrictorMiddleware> logger,
-			IConfigService ipConfigService,
+			IWhitelistedIpDataService whitelistedIpDataService,
 			IPRestrictorConfigService iPRestrictorConfigService
 		)
 		{
 			_next = next;
 			_logger = logger;
-			_ipConfigService = ipConfigService;
+			_whitelistedIpDataService = whitelistedIpDataService;
 			_iPRestrictorConfigService = iPRestrictorConfigService;
 		}
 
@@ -95,8 +94,8 @@ namespace Koben.IPRestrictor.Middleware
 		{
 			try
 			{
-				var data = _ipConfigService.LoadConfig()
-					.Cast<IpConfigData>()
+				var data = _whitelistedIpDataService.GetAll()
+					.Cast<WhitelistedIpDto>()
 					.Select(ip => IPAddressRange.Parse(ip.FromIp + "-" + ip.ToIp));
 
 				return data;

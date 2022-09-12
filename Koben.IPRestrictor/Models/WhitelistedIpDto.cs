@@ -1,13 +1,13 @@
+using Newtonsoft.Json;
 using System;
 using System.Net;
-using Koben.IPRestrictor.Interfaces;
-using Newtonsoft.Json;
-using TinyCsvParser.Mapping;
 
 namespace Koben.IPRestrictor.Models
 {
-	public class IpConfigData : IConfigData
+	public class WhitelistedIpDto
 	{
+		public int Id { get; set; }
+
 		[JsonProperty(PropertyName = "alias")]
 		public string Alias { get; set; }
 
@@ -17,10 +17,9 @@ namespace Koben.IPRestrictor.Models
 		[JsonProperty(PropertyName = "toIp")]
 		public string ToIp { get; set; }
 
+		public WhitelistedIpDto() { }
 
-		public IpConfigData() { }
-
-		public IpConfigData(string alias, string fromIpStr, string toIpStr)
+		public WhitelistedIpDto(string alias, string fromIpStr, string toIpStr)
 		{
 			if (string.IsNullOrWhiteSpace(alias))
 			{
@@ -56,18 +55,6 @@ namespace Koben.IPRestrictor.Models
 			Alias = alias;
 			FromIp = fromIpStr;
 			ToIp = toIpStr;
-
-		}
-
-	}
-
-	internal class CsvIpConfigDataMapping : CsvMapping<IpConfigData>
-	{
-		public CsvIpConfigDataMapping() : base()
-		{
-			MapProperty(0, c => c.Alias);
-			MapProperty(1, c => c.FromIp);
-			MapProperty(2, c => c.ToIp);
 		}
 	}
 }
