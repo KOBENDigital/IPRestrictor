@@ -38,18 +38,23 @@ namespace Koben.IPRestrictor.Middleware
 			var umbracoPath = _iPRestrictorConfigService.Settings.UmbracoPath.TrimStart('~');
 			var requestedPath = context.Request.Path.ToString();
 
-			if (_iPRestrictorConfigService.Settings.Enabled && requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
+			var hostIpAddress = context.Connection.RemoteIpAddress;
+
+			if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
 			{
-				var hostIpAddress = context.Connection.RemoteIpAddress;
+				var whitelisted = IsWhitelistedIp(hostIpAddress);
 
-				//We check if the IP adddress is a valid address or is not on the whitelist.
+				if (_iPRestrictorConfigService.Settings.LogEnabled)
+				{
+					_logger.LogInformation($"IP: {hostIpAddress}, IsWhitelistedIp: {whitelisted}");
+				}
 
-				if (!IsWhitelistedIp(hostIpAddress))
+				if (_iPRestrictorConfigService.Settings.Enabled && !whitelisted)
 				{
 					//if we are here is because is a wrong address or isnot whitelisted
 					context.Response.StatusCode = 403;
 					context.Response.Headers.Add("iprestrictor-attempted-ip", hostIpAddress.ToString());
-					context.Response.Redirect("/page-not-found/", true);
+					context.Response.Redirect(_iPRestrictorConfigService.Settings.RedirectUrl, true);
 
 					//we cancel request and return a 403.
 					return;
@@ -66,24 +71,27 @@ namespace Koben.IPRestrictor.Middleware
 				throw new ArgumentNullException(nameof(ip));
 			}
 
-			var whitelistedIps = new List<IPAddressRange>();
-			//var whitelistedIps = new List<IPAddressRange>((IEnumerable<IPAddressRange>)ApplicationContext.Current.ApplicationCache.RuntimeCache.GetCacheItem("iprestrictorconfig", () => GetData()));
+			var whitelistedIps = new List<IPAddressRange>
+			(
+				_whitelistedIpDataService
+				.GetAll()
+				.Select
+				(
+					x => new IPAddressRange(IPAddress.Parse(x.FromIp), IPAddress.Parse(x.ToIp))
+				)
+			);
 
 			//We add localhost to the whitelist
-			whitelistedIps.AddRange(new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")),
-																												new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
+			whitelistedIps.AddRange(new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")), new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
 
-			if (whitelistedIps.Any(config => config.Contains(ip.MapToIPv4())))
+			if (whitelistedIps.Any(x => x.Contains(ip.MapToIPv4())))
 			{
-				_logger.LogInformation("IP " + ip + " is whitelisted");
 				return true;
 			}
 			else
 			{
-				_logger.LogInformation("IP " + ip + " is NOT whitelisted");
 				return false;
 			}
-
 		}
 
 		/// <summary>
