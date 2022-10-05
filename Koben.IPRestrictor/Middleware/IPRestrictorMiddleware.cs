@@ -19,6 +19,7 @@ namespace Koben.IPRestrictor.Middleware
 		private readonly IWhitelistedIpDataService _whitelistedIpDataService;
 		private readonly IPRestrictorConfigService _iPRestrictorConfigService;
 
+
 		public IPRestrictorMiddleware
 		(
 			RequestDelegate next,
@@ -38,7 +39,7 @@ namespace Koben.IPRestrictor.Middleware
 			var umbracoPath = _iPRestrictorConfigService.Settings.UmbracoPath.TrimStart('~');
 			var requestedPath = context.Request.Path.ToString();
 
-			var hostIpAddress = context.Connection.RemoteIpAddress;
+			var hostIpAddress = IPAddress.Parse(GetIpAddress(context));
 
 			if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
 			{
@@ -54,7 +55,7 @@ namespace Koben.IPRestrictor.Middleware
 					//if we are here is because is a wrong address or isnot whitelisted
 					context.Response.StatusCode = 403;
 					context.Response.Headers.Add("iprestrictor-attempted-ip", hostIpAddress.ToString());
-					context.Response.Redirect(_iPRestrictorConfigService.Settings.RedirectUrl, true);
+					context.Response.Redirect(_iPRestrictorConfigService.Settings.RedirectUrl);
 
 					//we cancel request and return a 403.
 					return;
@@ -62,6 +63,23 @@ namespace Koben.IPRestrictor.Middleware
 			}
 
 			await _next.Invoke(context);
+		}
+
+		private string GetIpAddress(HttpContext context)
+		{
+			if (context.Request.Headers.ContainsKey("CF_Connecting_IP"))
+			{
+				return context.Request.Headers["CF_Connecting_IP"].ToString();
+			}
+			else if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
+			{
+				var ipList = context.Request.Headers["X-Forwarded-For"].ToString().Split(',').ToList();
+				return ipList.First();
+			}
+			else
+			{
+				return context.Connection.RemoteIpAddress.ToString();
+			}
 		}
 
 		private bool IsWhitelistedIp(IPAddress ip)
