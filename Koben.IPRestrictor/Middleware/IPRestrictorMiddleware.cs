@@ -36,30 +36,58 @@ namespace Koben.IPRestrictor.Middleware
 
 		public async Task Invoke(HttpContext context)
 		{
-			var umbracoPath = _iPRestrictorConfigService.Settings.UmbracoPath.TrimStart('~');
-			var requestedPath = context.Request.Path.ToString();
-
-			var hostIpAddress = IPAddress.Parse(GetIpAddress(context));
-
-			if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
+			try
 			{
-				var whitelisted = IsWhitelistedIp(hostIpAddress);
-
-				if (_iPRestrictorConfigService.Settings.LogEnabled)
+				if (_iPRestrictorConfigService.Settings.Enabled)
 				{
-					_logger.LogInformation($"IP: {hostIpAddress}, IsWhitelistedIp: {whitelisted}");
-				}
+					var umbracoPath = _iPRestrictorConfigService.Settings.UmbracoPath.TrimStart('~');
+					var requestedPath = context.Request.Path.ToString();
 
-				if (_iPRestrictorConfigService.Settings.Enabled && !whitelisted)
-				{
-					//if we are here is because is a wrong address or isnot whitelisted
-					context.Response.StatusCode = 403;
-					context.Response.Headers.Add("iprestrictor-attempted-ip", hostIpAddress.ToString());
-					context.Response.Redirect(_iPRestrictorConfigService.Settings.RedirectUrl);
+					if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
+					{
+						IPAddress hostIpAddress = null;
+						try
+						{
+							var ipString = GetIpAddress(context);
+							IPAddress.TryParse(ipString, out hostIpAddress);
 
-					//we cancel request and return a 403.
-					return;
+							if (hostIpAddress == null)
+							{
+								_logger.LogError("Ip address failed to parse: {ipString}", ipString);
+							}
+
+							var whitelisted = IsWhitelistedIp(hostIpAddress);
+
+							if (!whitelisted)
+							{
+								if (_iPRestrictorConfigService.Settings.LogEnabled)
+								{
+									_logger.LogInformation("IP: {hostIpAddress}, IsWhitelistedIp: {whitelisted}", hostIpAddress, whitelisted);
+								}
+
+								context.Response.StatusCode = 404;
+								context.Response.Headers.Add("iprestrictor-attempted-ip", hostIpAddress?.ToString());
+								context.Response.Redirect(_iPRestrictorConfigService.Settings.RedirectUrl);
+
+								return;
+							}
+						}
+						catch (Exception ex)
+						{
+							_logger.LogError(ex, "Ip restrictor threw an error at /umbraco");
+
+							context.Response.StatusCode = 404;
+							context.Response.Headers.Add("iprestrictor-attempted-ip", hostIpAddress?.ToString());
+							context.Response.Redirect(_iPRestrictorConfigService.Settings.RedirectUrl);
+
+							return;
+						}
+					}
 				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Ip-Restrictor threw an exception");
 			}
 
 			await _next.Invoke(context);
@@ -74,7 +102,7 @@ namespace Koben.IPRestrictor.Middleware
 			else if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
 			{
 				var ipList = context.Request.Headers["X-Forwarded-For"].ToString().Split(',').ToList();
-				return ipList.First();
+				return ipList.First(x => !x.Contains(':'));
 			}
 			else
 			{
@@ -86,7 +114,7 @@ namespace Koben.IPRestrictor.Middleware
 		{
 			if (ip == null)
 			{
-				throw new ArgumentNullException(nameof(ip));
+				return false;
 			}
 
 			var whitelistedIps = new List<IPAddressRange>
