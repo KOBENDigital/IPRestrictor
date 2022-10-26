@@ -97,17 +97,41 @@ namespace Koben.IPRestrictor.Middleware
 		{
 			if (context.Request.Headers.ContainsKey("CF_Connecting_IP"))
 			{
+				var cfConnectingIP = context.Request.Headers["CF_Connecting_IP"].ToString();
+				if (_iPRestrictorConfigService.Settings.LogEnabled)
+				{
+					_logger.LogInformation("Using the 'CF_Connecting_IP' header to get the IP address with a value of: {0}", cfConnectingIP);
+				}
+
 				return context.Request.Headers["CF_Connecting_IP"].ToString();
 			}
-			else if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
+
+			if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
 			{
-				var ipList = context.Request.Headers["X-Forwarded-For"].ToString().Split(',').ToList();
-				return string.Concat(ipList.First(x => !x.Contains(':')).Where(c => !Char.IsWhiteSpace(c)));
+				var xForwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
+				var ipList = xForwardedFor.Split(',').Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
+
+				var ip = ipList.First();
+
+				var uri = new Uri("http://" + ip);
+				var host = uri.Host;
+
+				if (_iPRestrictorConfigService.Settings.LogEnabled)
+				{
+					_logger.LogInformation("Using the 'X-Forwarded-For' header to get the IP address with a value of: {0} (raw header: {1})", host, xForwardedFor);
+				}
+
+				return host;
 			}
-			else
+
+			var remoteIpAddress = context.Connection.RemoteIpAddress.ToString();
+
+			if (_iPRestrictorConfigService.Settings.LogEnabled)
 			{
-				return context.Connection.RemoteIpAddress.ToString();
+				_logger.LogInformation("Using 'RemoteIpAddress' to get the IP address with a value of: {0}", remoteIpAddress);
 			}
+
+			return remoteIpAddress;
 		}
 
 		private bool IsWhitelistedIp(IPAddress ip)
