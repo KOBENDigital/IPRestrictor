@@ -102,7 +102,7 @@ namespace Koben.IPRestrictor.Middleware
 			else if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
 			{
 				var ipList = context.Request.Headers["X-Forwarded-For"].ToString().Split(',').ToList();
-				return ipList.First(x => !x.Contains(':'));
+				return string.Concat(ipList.First(x => !x.Contains(':')).Where(c => !Char.IsWhiteSpace(c)));
 			}
 			else
 			{
