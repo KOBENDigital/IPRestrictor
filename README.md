@@ -19,6 +19,15 @@ Under appsettings, create a section called "IPRestrictor", with:
   - Default value of "dataDbDSN"
   - Can be changed to "umbracoDbDSN" if you only have the CMS database
 
+"IPRestrictor": {
+	"Enabled": true,
+	"UmbracoPath": "/umbraco",
+	"RedirectUrl": "/error-404",
+	"LogEnabled": false,
+	"DataDbDSNName": "umbracoDbDSN"
+}
+
+
 ## Usage
 A new tab titled 'Restrict backoffice access' will be created on the Settings section. 
 To add a new ip just use the provided form. You can enter a range of addresses or only one address if you enter the same value in both inputs. Click the 'Add' button to add it to the list.
