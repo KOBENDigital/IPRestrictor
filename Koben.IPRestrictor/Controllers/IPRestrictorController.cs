@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Umbraco.Cms.Web.BackOffice.Controllers;
 using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Cms.Web.Common.Controllers;
@@ -47,7 +46,6 @@ namespace Koben.IPRestrictor.Controllers
 
 				var toInsert = filtered.Where(x => IPAddress.TryParse(x.FromIp, out var a) && IPAddress.TryParse(x.ToIp, out var b) && !currentIps.Any(y => y.Alias == x.Alias));
 				var inserted = _whitelistedIpDataService.Insert(toInsert);
-				var c = 0;
 			}
 			catch
 			{
