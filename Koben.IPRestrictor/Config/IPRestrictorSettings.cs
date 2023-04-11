@@ -8,7 +8,7 @@
 		internal const string StaticUmbracoPath = "/umbraco";
 		internal const string StaticRedirectUrl = "/error-404";
 		internal const bool StaticLogEnabled = false;
-		public const string StaticDataDbDsnName = "dataDbDsn";
+		public const string StaticDataDbDsnName = "dataDbDSN";
 
 		public bool Enabled { get; set; } = StaticEnabled;
 		public string UmbracoPath { get; set; } = StaticUmbracoPath;
