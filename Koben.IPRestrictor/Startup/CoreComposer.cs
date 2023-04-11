@@ -22,10 +22,15 @@ namespace Koben.IPRestrictor.Startup
 			(x => 
 				new Koben.Persistence.NPoco.Persistence.SqlServerDatabaseProvider
 				(
-					config.GetConnectionString
+					ConfigurationExtensions.GetConnectionString
 					(
+						config,
 						config.GetSection(IPRestrictorSettings.IPRestrictorSection)
-						.GetValue(nameof(IPRestrictorSettings.DataDbDSNName), IPRestrictorSettings.StaticDataDbDsnName)
+							.GetValue
+							(
+								nameof(IPRestrictorSettings.DataDbDSNName), 
+								IPRestrictorSettings.StaticDataDbDsnName
+							)
 					)
 				)
 			);
