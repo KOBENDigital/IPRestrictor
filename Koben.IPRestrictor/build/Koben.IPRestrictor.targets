@@ -26,31 +26,4 @@
 		<RemoveDir Directories="@(IPRestrictorDir)"  />
 	</Target>
 
-
-	<PropertyGroup>
-		<IPRestrictorRelationshipsPluginFolder>App_Plugins\IPRestrictorRelationshipManager</IPRestrictorRelationshipsPluginFolder>
-		<IPRestrictorRelationshipsPluginFilesPath>$(MSBuildThisFileDirectory)..\content\$(IPRestrictorRelationshipsPluginFolder)</IPRestrictorRelationshipsPluginFilesPath>
-		<IPRestrictorRelationshipManagerContentFilesPath>$(IPRestrictorRelationshipsPluginFilesPath)\**\*.*</IPRestrictorRelationshipManagerContentFilesPath>
-	</PropertyGroup>
-
-	<Target Name="CopyIPRestrictorRelationshipManagerAssets" BeforeTargets="Build">
-		<ItemGroup>
-			<IPRestrictorRelationshipManagerContentFiles Include="$(IPRestrictorRelationshipManagerContentFilesPath)" />
-		</ItemGroup>
-		<Message Text="Copying IPRestrictorRelationshipManager files: $(IPRestrictorRelationshipManagerContentFilesPath) - #@(IPRestrictorRelationshipManagerContentFiles->Count()) files"  Importance="high" />
-		<Copy
-		SourceFiles="@(IPRestrictorRelationshipManagerContentFiles)"
-		DestinationFiles="@(IPRestrictorRelationshipManagerContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\IPRestrictorRelationshipManager\%(RecursiveDir)%(Filename)%(Extension)')"
-		SkipUnchangedFiles="true" />
-
-	</Target>
-
-	<Target Name="ClearIPRestrictorRelationshipManagerAssets" BeforeTargets="Clean">
-		<ItemGroup>
-			<IPRestrictorRelationshipManagerDir Include="$(MSBuildProjectDirectory)\App_Plugins\IPRestrictorRelationshipManager\" />
-		</ItemGroup>
-		<Message Text="Clear old IPRestrictorRelationshipManager data"  Importance="high" />
-		<RemoveDir Directories="@(IPRestrictorRelationshipManagerDir)"  />
-	</Target>
-
 </Project>
