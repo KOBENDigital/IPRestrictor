@@ -9,6 +9,16 @@ Umbraco package that allows to restrict ip-based access to the backoffice.
 ### Umbraco Package
 [![Umb](https://img.shields.io/badge/Package-download-green.svg)](https://our.umbraco.org/projects/backoffice-extensions//)
 
+## Configuration
+Under appsettings, create a section called "IPRestrictor", with:
+- bool "Enabled", which enables and disables the 403 redirects
+- string "UmbracoPath", which will have a default value of "/umbraco"
+- string "RedirectUrl", which will have a default value of "/error-404"
+- bool "LogEnabled", which will log 403 redirects if enabled. Default value is false
+- string "DataDbDSNName", where you will put the key name of the database where whitelisted IPs are stored.
+  - Default value of "dataDbDSN"
+  - Can be changed to "umbracoDbDSN" if you only have the CMS database
+
 ## Usage
 A new tab titled 'Restrict backoffice access' will be created on the Settings section. 
 To add a new ip just use the provided form. You can enter a range of addresses or only one address if you enter the same value in both inputs. Click the 'Add' button to add it to the list.
