@@ -1,0 +1,22 @@
+{
+  "allowPackageTelemetry": true,
+  "dashboards": [
+    {
+      "access": [
+        {
+          "grant": "admin"
+        }
+      ],
+      "alias": "IPRestrictor",
+      "view": "/App_Plugins/IPRestrictor/settings.html",
+      "sections": [
+        "settings"
+      ]
+    }
+  ],
+  "javascript": [
+    "~/App_Plugins/IPRestrictor/settings.controller.js",
+    "~/App_Plugins/IPRestrictor/data.service.js"
+  ],
+  "css": [ "~/App_Plugins/IPRestrictor/styles.css" ]
+}
