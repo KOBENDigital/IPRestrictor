@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using NPoco;
+﻿using Koben.IPRestrictor.Services.IpDataService.Models;
+using Microsoft.Extensions.Logging;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.Migrations;
@@ -7,7 +7,6 @@ using Umbraco.Cms.Core.Scoping;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Infrastructure.Migrations;
 using Umbraco.Cms.Infrastructure.Migrations.Upgrade;
-using Umbraco.Cms.Infrastructure.Persistence.DatabaseAnnotations;
 
 namespace Koben.IPRestrictor.Startup
 {
@@ -45,12 +44,12 @@ namespace Koben.IPRestrictor.Startup
 
 			// Create a migration plan for a specific project/feature
 			// We can then track that latest migration state/step for this project/feature
-			var migrationPlan = new MigrationPlan(AddWhiteListedIpsTable.WhiteListedIpSchema.TableName);
+			var migrationPlan = new MigrationPlan(WhiteListedIpPoco.TableName);
 
 			// This is the steps we need to take
 			// Each step in the migration adds a unique value
 			migrationPlan.From(string.Empty)
-				.To<AddWhiteListedIpsTable>($"{AddWhiteListedIpsTable.WhiteListedIpSchema.TableName}-db");
+				.To<AddWhiteListedIpsTable>($"{WhiteListedIpPoco.TableName}-db");
 
 			// Go and upgrade our site (Will check if it needs to do the work or not)
 			// Based on the current/latest step
@@ -74,42 +73,18 @@ namespace Koben.IPRestrictor.Startup
 			Logger.LogDebug("Running migration {MigrationStep}", "AddWhiteListedIpsTable");
 
 			// Lots of methods available in the MigrationBase class - discover with this.
-			if (TableExists(WhiteListedIpSchema.TableName) == false)
+			if (TableExists(WhiteListedIpPoco.TableName) == false)
 			{
-				Create.Table<WhiteListedIpSchema>().Do();
+				Create.Table<WhiteListedIpPoco>().Do();
 			}
 			else
 			{
 				Logger.LogDebug
 				(
 					"The database table {DbTable} already exists, skipping",
-					WhiteListedIpSchema.TableName
+					WhiteListedIpPoco.TableName
 				);
 			}
-		}
-
-		[TableName(TableName)]
-		[PrimaryKey("Id", AutoIncrement = true)]
-		[ExplicitColumns]
-		public class WhiteListedIpSchema
-		{
-			public const string TableName = "WhiteListedIps";
-
-			[PrimaryKeyColumn(AutoIncrement = true, IdentitySeed = 1)]
-			[Column("Id")]
-			public int Id { get; set; }
-
-			[Column("UmbracoId")]
-			public int UmbracoId { get; set; }
-
-			[Column("Alias")]
-			public string Alias { get; set; }
-
-			[Column("FromIp")]
-			public string FromIp { get; set; }
-
-			[Column("ToIp")]
-			public string ToIp { get; set; }
 		}
 	}
 }
