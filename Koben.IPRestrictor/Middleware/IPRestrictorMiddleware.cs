@@ -16,7 +16,7 @@ namespace Koben.IPRestrictor.Middleware
 	{
 		private readonly ILogger<IPRestrictorMiddleware> _logger;
 		private readonly RequestDelegate _next;
-		private readonly IWhitelistedIpDataService _whitelistedIpDataService;
+		private readonly IWhiteListedIpDataService _whitelistedIpDataService;
 		private readonly IPRestrictorConfigService _iPRestrictorConfigService;
 
 
@@ -24,7 +24,7 @@ namespace Koben.IPRestrictor.Middleware
 		(
 			RequestDelegate next,
 			ILogger<IPRestrictorMiddleware> logger,
-			IWhitelistedIpDataService whitelistedIpDataService,
+			IWhiteListedIpDataService whitelistedIpDataService,
 			IPRestrictorConfigService iPRestrictorConfigService
 		)
 		{
@@ -56,13 +56,13 @@ namespace Koben.IPRestrictor.Middleware
 								_logger.LogError("Ip address failed to parse: {ipString}", ipString);
 							}
 
-							var whitelisted = IsWhitelistedIp(hostIpAddress);
+							var whitelisted = IsWhiteListedIp(hostIpAddress);
 
 							if (!whitelisted)
 							{
 								if (_iPRestrictorConfigService.Settings.LogEnabled)
 								{
-									_logger.LogInformation("IP: {hostIpAddress}, IsWhitelistedIp: {whitelisted}", hostIpAddress, whitelisted);
+									_logger.LogInformation("IP: {hostIpAddress}, IsWhiteListedIp: {whitelisted}", hostIpAddress, whitelisted);
 								}
 
 								context.Response.StatusCode = 404;
@@ -131,7 +131,7 @@ namespace Koben.IPRestrictor.Middleware
 			return context.Connection.RemoteIpAddress.ToString();
 		}
 
-		private bool IsWhitelistedIp(IPAddress ip)
+		private bool IsWhiteListedIp(IPAddress ip)
 		{
 			if (ip == null)
 			{
@@ -170,7 +170,7 @@ namespace Koben.IPRestrictor.Middleware
 			try
 			{
 				var data = _whitelistedIpDataService.GetAll()
-					.Cast<WhitelistedIpDto>()
+					.Cast<WhiteListedIpDto>()
 					.Select(ip => IPAddressRange.Parse(ip.FromIp + "-" + ip.ToIp));
 
 				return data;

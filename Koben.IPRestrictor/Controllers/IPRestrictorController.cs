@@ -16,12 +16,12 @@ namespace Koben.IPRestrictor.Controllers
 	[PluginController("KobenIPRestrictor")]
 	public class IpRestrictorController : UmbracoAuthorizedJsonController
 	{
-		private readonly IWhitelistedIpDataService _whitelistedIpDataService;
+		private readonly IWhiteListedIpDataService _whitelistedIpDataService;
 		private readonly ILogger<IpRestrictorController> _logger;
 
 		public IpRestrictorController
 		(
-			IWhitelistedIpDataService whitelistedIpDataService,
+			IWhiteListedIpDataService whitelistedIpDataService,
 			ILogger<IpRestrictorController> logger
 		)
 		{
@@ -30,7 +30,7 @@ namespace Koben.IPRestrictor.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult SaveData([FromBody] IEnumerable<WhitelistedIpDto> data)
+		public IActionResult SaveData([FromBody] IEnumerable<WhiteListedIpDto> data)
 		{
 			try
 			{
@@ -60,7 +60,7 @@ namespace Koben.IPRestrictor.Controllers
 			try
 			{
 				var data = _whitelistedIpDataService.GetAll();
-				return Ok(data.Cast<WhitelistedIpDto>());
+				return Ok(data.Cast<WhiteListedIpDto>());
 			}
 			catch (Exception ex)
 			{

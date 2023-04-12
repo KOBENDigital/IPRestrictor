@@ -9,47 +9,47 @@ using System.Linq;
 
 namespace Koben.IPRestrictor.Services.IpDataService
 {
-  internal class WhitelistedIpDataService : IWhitelistedIpDataService
+  internal class WhiteListedIpDataService : IWhiteListedIpDataService
 	{
 		private readonly IDatabaseProvider _dbProvider;
-		private readonly IDataModelMapper<WhitelistedIpPoco, WhitelistedIpDto> _modelMapper;
+		private readonly IDataModelMapper<WhiteListedIpPoco, WhiteListedIpDto> _modelMapper;
 
-		public WhitelistedIpDataService(IDatabaseProvider dbProvider, IDataModelMapper<WhitelistedIpPoco, WhitelistedIpDto> modelMapper)
+		public WhiteListedIpDataService(IDatabaseProvider dbProvider, IDataModelMapper<WhiteListedIpPoco, WhiteListedIpDto> modelMapper)
 		{
 			_dbProvider = dbProvider;
 			_modelMapper = modelMapper;
 		}
 
-		public IEnumerable<WhitelistedIpDto> GetAll()
+		public IEnumerable<WhiteListedIpDto> GetAll()
 		{
 			using var db = _dbProvider.GetDatabase();
 
-			var sql = Sql.Builder.Select($"* FROM {WhitelistedIpPoco.TableName} ORDER BY Alias");
+			var sql = Sql.Builder.Select($"* FROM {WhiteListedIpPoco.TableName} ORDER BY Alias");
 
-			var data = db.Fetch<WhitelistedIpPoco>(sql);
+			var data = db.Fetch<WhiteListedIpPoco>(sql);
 
 			var mapped = _modelMapper.Map(data);
 
 			return mapped;
 		}
 
-		public WhitelistedIpDto Get(long id)
+		public WhiteListedIpDto Get(long id)
 		{
 			using var db = _dbProvider.GetDatabase();
 
-			var data = db.Query<WhitelistedIpPoco>().SingleOrDefault(x => x.Id == id);
+			var data = db.Query<WhiteListedIpPoco>().SingleOrDefault(x => x.Id == id);
 
 			var mapped = _modelMapper.Map(data);
 
 			return mapped;
 		}
 
-		public Page<WhitelistedIpDto> Get(int pageNumber, int pageSize)
+		public Page<WhiteListedIpDto> Get(int pageNumber, int pageSize)
 		{
 			throw new System.NotImplementedException();
 		}
 
-		public WhitelistedIpDto Insert(WhitelistedIpDto model)
+		public WhiteListedIpDto Insert(WhiteListedIpDto model)
 		{
 			using var db = _dbProvider.GetDatabase();
 
@@ -58,9 +58,9 @@ namespace Koben.IPRestrictor.Services.IpDataService
 			return Get(id);
 		}
 
-		public IEnumerable<WhitelistedIpDto> Insert(IEnumerable<WhitelistedIpDto> models)
+		public IEnumerable<WhiteListedIpDto> Insert(IEnumerable<WhiteListedIpDto> models)
 		{
-			List<WhitelistedIpDto> results = new List<WhitelistedIpDto>();
+			List<WhiteListedIpDto> results = new List<WhiteListedIpDto>();
 			foreach (var model in models)
 			{
 				results.Add(Insert(model));
@@ -68,12 +68,12 @@ namespace Koben.IPRestrictor.Services.IpDataService
 			return results;
 		}
 
-		public WhitelistedIpDto Update(WhitelistedIpDto model)
+		public WhiteListedIpDto Update(WhiteListedIpDto model)
 		{
 			throw new System.NotImplementedException();
 		}
 
-		public IEnumerable<WhitelistedIpDto> Update(IEnumerable<WhitelistedIpDto> models)
+		public IEnumerable<WhiteListedIpDto> Update(IEnumerable<WhiteListedIpDto> models)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -82,7 +82,7 @@ namespace Koben.IPRestrictor.Services.IpDataService
 		{
 			using var db = _dbProvider.GetDatabase();
 
-			return db.Delete<WhitelistedIpPoco>(id) > 0;
+			return db.Delete<WhiteListedIpPoco>(id) > 0;
 		}
 	}
 }

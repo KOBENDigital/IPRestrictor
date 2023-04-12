@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace Koben.IPRestrictor.Services.IpDataService.Interfaces
 {
-	public interface IWhitelistedIpDataService : IRepository<WhitelistedIpDto, long>
+	public interface IWhiteListedIpDataService : IRepository<WhiteListedIpDto, long>
 	{
-		IEnumerable<WhitelistedIpDto> GetAll();
+		IEnumerable<WhiteListedIpDto> GetAll();
 	}
 }
