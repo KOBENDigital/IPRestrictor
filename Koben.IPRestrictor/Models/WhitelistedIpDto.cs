@@ -4,7 +4,7 @@ using System.Net;
 
 namespace Koben.IPRestrictor.Models
 {
-	public class WhitelistedIpDto
+	public class WhiteListedIpDto
 	{
 		public int Id { get; set; }
 
@@ -17,9 +17,9 @@ namespace Koben.IPRestrictor.Models
 		[JsonProperty(PropertyName = "toIp")]
 		public string ToIp { get; set; }
 
-		public WhitelistedIpDto() { }
+		public WhiteListedIpDto() { }
 
-		public WhitelistedIpDto(string alias, string fromIpStr, string toIpStr)
+		public WhiteListedIpDto(string alias, string fromIpStr, string toIpStr)
 		{
 			if (string.IsNullOrWhiteSpace(alias))
 			{

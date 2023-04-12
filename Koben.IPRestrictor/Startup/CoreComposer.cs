@@ -17,19 +17,24 @@ namespace Koben.IPRestrictor.Startup
 		{
 			var config = builder.Config;
 
-			builder.Services.AddSingleton<Koben.Persistence.Interfaces.IDataModelMapper<WhitelistedIpPoco, WhitelistedIpDto>, WhitelistedIpMapper>();
+			builder.Services.AddSingleton<Koben.Persistence.Interfaces.IDataModelMapper<WhiteListedIpPoco, WhiteListedIpDto>, WhiteListedIpMapper>();
 			builder.Services.AddSingleton<Koben.Persistence.Interfaces.IDatabaseProvider>
 			(x => 
 				new Koben.Persistence.NPoco.Persistence.SqlServerDatabaseProvider
 				(
-					config.GetConnectionString
+					ConfigurationExtensions.GetConnectionString
 					(
+						config,
 						config.GetSection(IPRestrictorSettings.IPRestrictorSection)
-						.GetValue(nameof(IPRestrictorSettings.DataDbDSNName), IPRestrictorSettings.StaticDataDbDsnName)
+							.GetValue
+							(
+								nameof(IPRestrictorSettings.DataDbDSNName), 
+								IPRestrictorSettings.StaticDataDbDsnName
+							)
 					)
 				)
 			);
-			builder.Services.AddSingleton<IWhitelistedIpDataService, WhitelistedIpDataService>();
+			builder.Services.AddSingleton<IWhiteListedIpDataService, WhiteListedIpDataService>();
 			builder.AddIPRestrictorConfigs();
 		}
 	}

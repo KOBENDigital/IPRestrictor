@@ -10,7 +10,7 @@ using Umbraco.Cms.Infrastructure.Migrations.Upgrade;
 
 namespace Koben.IPRestrictor.Startup
 {
-	public class WhiteListedIpsComposer : ComponentComposer<WhiteListedIpsComponent>, IComposer
+	public class WhiteListedIpsComposer : ComponentComposer<WhiteListedIpsComponent>
 	{
 	}
 
@@ -44,12 +44,12 @@ namespace Koben.IPRestrictor.Startup
 
 			// Create a migration plan for a specific project/feature
 			// We can then track that latest migration state/step for this project/feature
-			var migrationPlan = new MigrationPlan(WhitelistedIpPoco.TableName);
+			var migrationPlan = new MigrationPlan(WhiteListedIpPoco.TableName);
 
 			// This is the steps we need to take
 			// Each step in the migration adds a unique value
 			migrationPlan.From(string.Empty)
-							.To<AddIpsTable>($"{WhitelistedIpPoco.TableName}-db");
+				.To<AddWhiteListedIpsTable>($"{WhiteListedIpPoco.TableName}-db");
 
 			// Go and upgrade our site (Will check if it needs to do the work or not)
 			// Based on the current/latest step
@@ -62,21 +62,28 @@ namespace Koben.IPRestrictor.Startup
 		}
 	}
 
-	public class AddIpsTable : MigrationBase
+	public class AddWhiteListedIpsTable : MigrationBase
 	{
-		public AddIpsTable(IMigrationContext context) : base(context)
+		public AddWhiteListedIpsTable(IMigrationContext context) : base(context)
 		{
 		}
+
 		protected override void Migrate()
 		{
+			Logger.LogDebug("Running migration {MigrationStep}", "AddWhiteListedIpsTable");
+
 			// Lots of methods available in the MigrationBase class - discover with this.
-			if (TableExists(WhitelistedIpPoco.TableName) == false)
+			if (TableExists(WhiteListedIpPoco.TableName) == false)
 			{
-				Create.Table<WhitelistedIpPoco>().Do();
+				Create.Table<WhiteListedIpPoco>().Do();
 			}
 			else
 			{
-				Logger.LogDebug($"The database table {WhitelistedIpPoco.TableName} already exists, skipping");
+				Logger.LogDebug
+				(
+					"The database table {DbTable} already exists, skipping",
+					WhiteListedIpPoco.TableName
+				);
 			}
 		}
 	}

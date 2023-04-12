@@ -19,6 +19,34 @@ Under appsettings, create a section called "IPRestrictor", with:
   - Default value of "dataDbDSN"
   - Can be changed to "umbracoDbDSN" if you only have the CMS database
 
+"IPRestrictor": {
+	"Enabled": true,
+	"UmbracoPath": "/umbraco",
+	"RedirectUrl": "/error-404",
+	"LogEnabled": false,
+	"DataDbDSNName": "umbracoDbDSN"
+}
+
+## Migration
+If the package is configured to use the umbracoDbDSN, the migration will run automatically
+If not, run the following script on your Data-DB to create the "WhiteListedIPs" table:
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[WhiteListedIPs](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Alias] [nvarchar](50) NOT NULL,
+	[FromIp] [nvarchar](50) NOT NULL,
+	[ToIp] [nvarchar](50) NOT NULL,
+	[UmbracoId] [int] NULL,
+ CONSTRAINT [PK_WhiteListedIPs] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 ## Usage
 A new tab titled 'Restrict backoffice access' will be created on the Settings section. 
 To add a new ip just use the provided form. You can enter a range of addresses or only one address if you enter the same value in both inputs. Click the 'Add' button to add it to the list.

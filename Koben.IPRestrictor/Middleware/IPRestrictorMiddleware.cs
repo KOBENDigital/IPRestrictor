@@ -16,15 +16,14 @@ namespace Koben.IPRestrictor.Middleware
 	{
 		private readonly ILogger<IPRestrictorMiddleware> _logger;
 		private readonly RequestDelegate _next;
-		private readonly IWhitelistedIpDataService _whitelistedIpDataService;
+		private readonly IWhiteListedIpDataService _whitelistedIpDataService;
 		private readonly IPRestrictorConfigService _iPRestrictorConfigService;
-
 
 		public IPRestrictorMiddleware
 		(
 			RequestDelegate next,
 			ILogger<IPRestrictorMiddleware> logger,
-			IWhitelistedIpDataService whitelistedIpDataService,
+			IWhiteListedIpDataService whitelistedIpDataService,
 			IPRestrictorConfigService iPRestrictorConfigService
 		)
 		{
@@ -56,13 +55,13 @@ namespace Koben.IPRestrictor.Middleware
 								_logger.LogError("Ip address failed to parse: {ipString}", ipString);
 							}
 
-							var whitelisted = IsWhitelistedIp(hostIpAddress);
+							var whitelisted = IsWhiteListedIp(hostIpAddress);
 
 							if (!whitelisted)
 							{
 								if (_iPRestrictorConfigService.Settings.LogEnabled)
 								{
-									_logger.LogInformation("IP: {hostIpAddress}, IsWhitelistedIp: {whitelisted}", hostIpAddress, whitelisted);
+									_logger.LogInformation("IP: {hostIpAddress}, IsWhiteListedIp: {whitelisted}", hostIpAddress, whitelisted);
 								}
 
 								context.Response.StatusCode = 404;
@@ -99,58 +98,75 @@ namespace Koben.IPRestrictor.Middleware
 			{
 				return context.Request.Headers["CF_Connecting_IP"].ToString();
 			}
-			else if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
+
+			if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
 			{
-				var ipList = context.Request.Headers["X-Forwarded-For"].ToString().Split(',').ToList();
-				return string.Concat(ipList.First(x => !x.Contains(':')).Where(c => !Char.IsWhiteSpace(c)));
+				try
+				{
+					var ipAddresses = context
+						.Request
+						.Headers["X-Forwarded-For"]
+						.ToString()
+						.Split(',', StringSplitOptions.RemoveEmptyEntries)
+						.ToList();
+
+					var firstIpAddressWithoutAColon = string.Concat(ipAddresses.FirstOrDefault(x => !x.Contains(':'))?.Where(c => !char.IsWhiteSpace(c)) ?? Array.Empty<char>());
+
+					if (_iPRestrictorConfigService.Settings.LogEnabled)
+					{
+						_logger.LogInformation("X-Forwarded-For value: {0}", context
+							.Request
+							.Headers["X-Forwarded-For"]
+							.ToString());
+					}
+
+					return string.IsNullOrWhiteSpace(firstIpAddressWithoutAColon) ? ipAddresses.First() : firstIpAddressWithoutAColon;
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError
+					(
+						ex,
+						"IP could not be retrieved from X-Forwarded-For header: {header}",
+						context
+							.Request
+							.Headers["X-Forwarded-For"]
+							.ToString()
+					);
+
+					throw;
+				}
 			}
-			else
-			{
-				return context.Connection.RemoteIpAddress.ToString();
-			}
+
+			return context.Connection.RemoteIpAddress?.ToString();
 		}
 
-		private bool IsWhitelistedIp(IPAddress ip)
+		private bool IsWhiteListedIp(IPAddress ip)
 		{
 			if (ip == null)
 			{
 				return false;
 			}
 
-			var whitelistedIps = new List<IPAddressRange>
-			(
-				_whitelistedIpDataService
-				.GetAll()
-				.Select
-				(
-					x => new IPAddressRange(IPAddress.Parse(x.FromIp), IPAddress.Parse(x.ToIp))
-				)
-			);
+			var whitelistedIps = GetIPAddressRanges().ToList();
 
 			//We add localhost to the whitelist
-			whitelistedIps.AddRange(new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")), new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
+			whitelistedIps.AddRange(new[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")), new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
 
-			if (whitelistedIps.Any(x => x.Contains(ip.MapToIPv4())))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return whitelistedIps.Any(x => x.Contains(ip.MapToIPv4()));
 		}
 
 		/// <summary>
 		/// Retrieves configuration data from service transforming it to ranges of addresses
 		/// </summary>
 		/// <returns></returns>
-		private IEnumerable<IPAddressRange> GetData()
+		private IEnumerable<IPAddressRange> GetIPAddressRanges()
 		{
 			try
 			{
-				var data = _whitelistedIpDataService.GetAll()
-					.Cast<WhitelistedIpDto>()
-					.Select(ip => IPAddressRange.Parse(ip.FromIp + "-" + ip.ToIp));
+				var data = _whitelistedIpDataService
+					.GetAll()
+					.Select(x => new IPAddressRange(IPAddress.Parse(x.FromIp), IPAddress.Parse(x.ToIp)));
 
 				return data;
 			}

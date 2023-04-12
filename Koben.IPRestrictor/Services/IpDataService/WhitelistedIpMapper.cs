@@ -6,34 +6,34 @@ using System.Linq;
 
 namespace Koben.IPRestrictor.Services.IpDataService
 {
-	public class WhitelistedIpMapper : IDataModelMapper<WhitelistedIpPoco, WhitelistedIpDto>
+	public class WhiteListedIpMapper : IDataModelMapper<WhiteListedIpPoco, WhiteListedIpDto>
 	{
-		public WhitelistedIpDto Map(WhitelistedIpPoco source)
+		public WhiteListedIpDto Map(WhiteListedIpPoco source)
 		{
 			if (source == null)
 			{
 				return null;
 			}
 
-			var target = new WhitelistedIpDto(source.Alias, source.FromIp, source.ToIp);
+			var target = new WhiteListedIpDto(source.Alias, source.FromIp, source.ToIp);
 			target.Id = source.Id;
 
 			return target;
 		}
 
-		public IEnumerable<WhitelistedIpDto> Map(IEnumerable<WhitelistedIpPoco> sources)
+		public IEnumerable<WhiteListedIpDto> Map(IEnumerable<WhiteListedIpPoco> sources)
 		{
-			return sources?.Select(Map) ?? Enumerable.Empty<WhitelistedIpDto>();
+			return sources?.Select(Map) ?? Enumerable.Empty<WhiteListedIpDto>();
 		}
 
-		public WhitelistedIpPoco Map(WhitelistedIpDto source)
+		public WhiteListedIpPoco Map(WhiteListedIpDto source)
 		{
 			if (source == null)
 			{
 				return null;
 			}
 
-			var target = new WhitelistedIpPoco() 
+			var target = new WhiteListedIpPoco
 			{ 
 				Id = source.Id,
 				Alias = source.Alias,
@@ -44,9 +44,9 @@ namespace Koben.IPRestrictor.Services.IpDataService
 			return target;
 		}
 
-		public IEnumerable<WhitelistedIpPoco> Map(IEnumerable<WhitelistedIpDto> sources)
+		public IEnumerable<WhiteListedIpPoco> Map(IEnumerable<WhiteListedIpDto> sources)
 		{
-			return sources?.Select(Map) ?? Enumerable.Empty<WhitelistedIpPoco>();
+			return sources?.Select(Map) ?? Enumerable.Empty<WhiteListedIpPoco>();
 		}
 	}
 }
