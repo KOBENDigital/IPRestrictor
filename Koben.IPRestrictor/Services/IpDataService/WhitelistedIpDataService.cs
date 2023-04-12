@@ -24,7 +24,10 @@ namespace Koben.IPRestrictor.Services.IpDataService
 		{
 			using var db = _dbProvider.GetDatabase();
 
-			var sql = Sql.Builder.Select($"* FROM {WhiteListedIpPoco.TableName} ORDER BY Alias");
+			var sql = Sql.Builder
+				.Select("*")
+				.From(WhiteListedIpPoco.TableName)
+				.OrderBy(nameof(WhiteListedIpPoco.Alias));
 
 			var data = db.Fetch<WhiteListedIpPoco>(sql);
 
@@ -60,12 +63,7 @@ namespace Koben.IPRestrictor.Services.IpDataService
 
 		public IEnumerable<WhiteListedIpDto> Insert(IEnumerable<WhiteListedIpDto> models)
 		{
-			List<WhiteListedIpDto> results = new List<WhiteListedIpDto>();
-			foreach (var model in models)
-			{
-				results.Add(Insert(model));
-			}
-			return results;
+			return models.Select(Insert).ToList();
 		}
 
 		public WhiteListedIpDto Update(WhiteListedIpDto model)

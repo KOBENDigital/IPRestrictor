@@ -110,7 +110,7 @@ namespace Koben.IPRestrictor.Middleware
 						.Split(',', StringSplitOptions.RemoveEmptyEntries)
 						.ToList();
 
-					var firstIpAddressWithAColon = string.Concat(ipAddresses.FirstOrDefault(x => !x.Contains(':'))?.Where(c => !char.IsWhiteSpace(c)) ?? Array.Empty<char>());
+					var firstIpAddressWithoutAColon = string.Concat(ipAddresses.FirstOrDefault(x => !x.Contains(':'))?.Where(c => !char.IsWhiteSpace(c)) ?? Array.Empty<char>());
 
 					if (_iPRestrictorConfigService.Settings.LogEnabled)
 					{
@@ -120,7 +120,7 @@ namespace Koben.IPRestrictor.Middleware
 							.ToString());
 					}
 
-					return string.IsNullOrWhiteSpace(firstIpAddressWithAColon) ? ipAddresses.First() : firstIpAddressWithAColon;
+					return string.IsNullOrWhiteSpace(firstIpAddressWithoutAColon) ? ipAddresses.First() : firstIpAddressWithoutAColon;
 				}
 				catch (Exception ex)
 				{
