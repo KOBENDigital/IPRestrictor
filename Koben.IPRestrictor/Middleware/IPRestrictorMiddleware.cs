@@ -19,7 +19,6 @@ namespace Koben.IPRestrictor.Middleware
 		private readonly IWhiteListedIpDataService _whitelistedIpDataService;
 		private readonly IPRestrictorConfigService _iPRestrictorConfigService;
 
-
 		public IPRestrictorMiddleware
 		(
 			RequestDelegate next,
@@ -139,7 +138,7 @@ namespace Koben.IPRestrictor.Middleware
 				}
 			}
 
-			return context.Connection.RemoteIpAddress.ToString();
+			return context.Connection.RemoteIpAddress?.ToString();
 		}
 
 		private bool IsWhiteListedIp(IPAddress ip)
@@ -160,28 +159,20 @@ namespace Koben.IPRestrictor.Middleware
 			);
 
 			//We add localhost to the whitelist
-			whitelistedIps.AddRange(new IPAddressRange[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")), new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
+			whitelistedIps.AddRange(new[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")), new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
 
-			if (whitelistedIps.Any(x => x.Contains(ip.MapToIPv4())))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return whitelistedIps.Any(x => x.Contains(ip.MapToIPv4()));
 		}
 
 		/// <summary>
 		/// Retrieves configuration data from service transforming it to ranges of addresses
 		/// </summary>
 		/// <returns></returns>
-		private IEnumerable<IPAddressRange> GetData()
+		private IEnumerable<IPAddressRange> GetIPAddressRanges()
 		{
 			try
 			{
 				var data = _whitelistedIpDataService.GetAll()
-					.Cast<WhiteListedIpDto>()
 					.Select(ip => IPAddressRange.Parse(ip.FromIp + "-" + ip.ToIp));
 
 				return data;

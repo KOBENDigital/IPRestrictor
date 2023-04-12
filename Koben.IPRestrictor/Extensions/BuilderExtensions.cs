@@ -17,12 +17,12 @@ namespace Koben.IPRestrictor.Extensions
 
 		public static IUmbracoBuilder AddIPRestrictorConfigs(this IUmbracoBuilder builder, Action<IPRestrictorSettings> defaultOptions = default)
 		{
-			// if the typeScriptBuilder Service is registred then we assume this has been added before so we don't do it again. 
 			if (builder.Services.FirstOrDefault(x => x.ServiceType == typeof(IPRestrictorConfigService)) != null)
+			{
 				return builder;
+			}
 
 			var configSection = builder.Config.GetSection(IPRestrictorSettings.IPRestrictorSection);
-			// load up the settings. 
 
 			var options = builder.Services.AddOptions<IPRestrictorSettings>()
 					.Bind(configSection);
@@ -31,6 +31,7 @@ namespace Koben.IPRestrictor.Extensions
 			{
 				options.Configure(defaultOptions);
 			}
+
 			options.ValidateDataAnnotations();
 
 			builder.Services.AddSingleton<IPRestrictorConfigService>();
