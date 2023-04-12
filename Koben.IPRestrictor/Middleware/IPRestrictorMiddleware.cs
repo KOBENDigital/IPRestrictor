@@ -99,7 +99,8 @@ namespace Koben.IPRestrictor.Middleware
 			{
 				return context.Request.Headers["CF_Connecting_IP"].ToString();
 			}
-			else if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
+
+			if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
 			{
 				try
 				{
@@ -117,17 +118,21 @@ namespace Koben.IPRestrictor.Middleware
 				}
 				catch (Exception ex)
 				{
-					_logger.LogError
-					(
-						ex,
-						"IP could not be retrieved from X-Forwarded-For header: {header}",
-						context
-							.Request
-							.Headers["X-Forwarded-For"]
-							.ToString()
-					);
+					if (_iPRestrictorConfigService.Settings.LogEnabled)
+					{
+						_logger.LogError
+						(
+							ex,
+							"IP could not be retrieved from X-Forwarded-For header: {header}",
+							context
+								.Request
+								.Headers["X-Forwarded-For"]
+								.ToString()
+						);
+					}
 				}
 			}
+
 			return context.Connection.RemoteIpAddress.ToString();
 		}
 
