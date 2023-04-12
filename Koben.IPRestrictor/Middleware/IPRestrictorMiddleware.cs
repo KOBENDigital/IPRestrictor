@@ -101,13 +101,34 @@ namespace Koben.IPRestrictor.Middleware
 			}
 			else if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
 			{
-				var ipList = context.Request.Headers["X-Forwarded-For"].ToString().Split(',').ToList();
-				return string.Concat(ipList.First(x => !x.Contains(':')).Where(c => !Char.IsWhiteSpace(c)));
+				try
+				{
+					return string.Concat
+					(
+						context
+							.Request
+							.Headers["X-Forwarded-For"]
+							.ToString()
+							.Split(',')
+							.ToList()
+							.First(x => !x.Contains(':'))
+							.Where(c => !Char.IsWhiteSpace(c))
+					);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError
+					(
+						ex,
+						"IP could not be retrieved from X-Forwarded-For header: {header}",
+						context
+							.Request
+							.Headers["X-Forwarded-For"]
+							.ToString()
+					);
+				}
 			}
-			else
-			{
-				return context.Connection.RemoteIpAddress.ToString();
-			}
+			return context.Connection.RemoteIpAddress.ToString();
 		}
 
 		private bool IsWhitelistedIp(IPAddress ip)
