@@ -148,15 +148,7 @@ namespace Koben.IPRestrictor.Middleware
 				return false;
 			}
 
-			var whitelistedIps = new List<IPAddressRange>
-			(
-				_whitelistedIpDataService
-				.GetAll()
-				.Select
-				(
-					x => new IPAddressRange(IPAddress.Parse(x.FromIp), IPAddress.Parse(x.ToIp))
-				)
-			);
+			var whitelistedIps = GetIPAddressRanges().ToList();
 
 			//We add localhost to the whitelist
 			whitelistedIps.AddRange(new[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")), new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
@@ -172,8 +164,9 @@ namespace Koben.IPRestrictor.Middleware
 		{
 			try
 			{
-				var data = _whitelistedIpDataService.GetAll()
-					.Select(ip => IPAddressRange.Parse(ip.FromIp + "-" + ip.ToIp));
+				var data = _whitelistedIpDataService
+					.GetAll()
+					.Select(x => new IPAddressRange(IPAddress.Parse(x.FromIp), IPAddress.Parse(x.ToIp)));
 
 				return data;
 			}
