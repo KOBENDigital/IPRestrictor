@@ -33,7 +33,7 @@ namespace Koben.IPRestrictor.Services.IpDataService
 				return null;
 			}
 
-			var target = new WhiteListedIpPoco() 
+			var target = new WhiteListedIpPoco
 			{ 
 				Id = source.Id,
 				Alias = source.Alias,
