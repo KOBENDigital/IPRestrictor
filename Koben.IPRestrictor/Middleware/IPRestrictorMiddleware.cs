@@ -104,32 +104,38 @@ namespace Koben.IPRestrictor.Middleware
 			{
 				try
 				{
-					return string.Concat
+					var ipAddresses = context
+						.Request
+						.Headers["X-Forwarded-For"]
+						.ToString()
+						.Split(',', StringSplitOptions.RemoveEmptyEntries)
+						.ToList();
+
+					var firstIpAddressWithAColon = string.Concat(ipAddresses.FirstOrDefault(x => !x.Contains(':'))?.Where(c => !char.IsWhiteSpace(c)) ?? Array.Empty<char>());
+
+					if (_iPRestrictorConfigService.Settings.LogEnabled)
+					{
+						_logger.LogInformation("X-Forwarded-For value: {0}", context
+							.Request
+							.Headers["X-Forwarded-For"]
+							.ToString());
+					}
+
+					return string.IsNullOrWhiteSpace(firstIpAddressWithAColon) ? ipAddresses.First() : firstIpAddressWithAColon;
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError
 					(
+						ex,
+						"IP could not be retrieved from X-Forwarded-For header: {header}",
 						context
 							.Request
 							.Headers["X-Forwarded-For"]
 							.ToString()
-							.Split(',')
-							.ToList()
-							.First(x => !x.Contains(':'))
-							.Where(c => !Char.IsWhiteSpace(c))
 					);
-				}
-				catch (Exception ex)
-				{
-					if (_iPRestrictorConfigService.Settings.LogEnabled)
-					{
-						_logger.LogError
-						(
-							ex,
-							"IP could not be retrieved from X-Forwarded-For header: {header}",
-							context
-								.Request
-								.Headers["X-Forwarded-For"]
-								.ToString()
-						);
-					}
+
+					throw;
 				}
 			}
 
