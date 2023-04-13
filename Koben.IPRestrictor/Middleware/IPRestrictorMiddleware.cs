@@ -120,7 +120,7 @@ namespace Koben.IPRestrictor.Middleware
 							.ToString());
 					}
 
-					return string.IsNullOrWhiteSpace(firstIpAddressWithoutAColon) ? ipAddresses.First() : firstIpAddressWithoutAColon;
+					return string.IsNullOrWhiteSpace(firstIpAddressWithoutAColon) ? ipAddresses.First().Split(':')[0] : firstIpAddressWithoutAColon;
 				}
 				catch (Exception ex)
 				{
