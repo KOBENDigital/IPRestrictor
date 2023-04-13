@@ -32,9 +32,20 @@ namespace Koben.IPRestrictor.Startup
 
 				if (db.ExecuteScalar<int>(sqlTableExists) == 0)
 				{
-					var sqlCreateTable = $"CREATE TABLE [dbo].[{WhiteListedIpPoco.TableName}]([Id] [int] IDENTITY(1,1) NOT NULL, [Alias] [nvarchar](50) NOT NULL, [FromIp] [nvarchar](50) NOT NULL, [ToIp] [nvarchar](50) NOT NULL, [UmbracoId] [int] NULL, CONSTRAINT [PK_{WhiteListedIpPoco.TableName}] PRIMARY KEY CLUSTERED ([Id] ASC )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY]";
+					var sqlCreateTable = $"CREATE TABLE [dbo].[{WhiteListedIpPoco.TableName}](" +
+						$"[Id] [int] IDENTITY(1,1) NOT NULL, " +
+						$"[Alias] [nvarchar](50) NOT NULL, " +
+						$"[FromIp] [nvarchar](50) NOT NULL, " +
+						$"[ToIp] [nvarchar](50) NOT NULL, " +
+						$"[UmbracoId] [int] NULL, " +
+						$"CONSTRAINT [PK_{WhiteListedIpPoco.TableName}] PRIMARY KEY CLUSTERED ([Id] ASC )WITH (PAD_INDEX = OFF, " +
+						$"STATISTICS_NORECOMPUTE = OFF, " +
+						$"IGNORE_DUP_KEY = OFF, " +
+						$"ALLOW_ROW_LOCKS = ON, " +
+						$"ALLOW_PAGE_LOCKS = ON" +
+						$") ON [PRIMARY]) ON [PRIMARY]";
 
-					db.ExecuteScalar<int>(sqlCreateTable);
+					db.Execute(sqlCreateTable);
 				}
 			}
 			catch(Exception ex)
