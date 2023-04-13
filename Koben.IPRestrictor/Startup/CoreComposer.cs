@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Cms.Core.Notifications;
 
 namespace Koben.IPRestrictor.Startup
 {
@@ -36,6 +37,7 @@ namespace Koben.IPRestrictor.Startup
 			);
 			builder.Services.AddSingleton<IWhiteListedIpDataService, WhiteListedIpDataService>();
 			builder.AddIPRestrictorConfigs();
+			builder.AddNotificationHandler<UmbracoApplicationStartingNotification, AddWhiteListedIpsMigration>();
 		}
 	}
 }
