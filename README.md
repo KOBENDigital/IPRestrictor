@@ -10,17 +10,19 @@ Umbraco package that allows to restrict ip-based access to the backoffice.
 [![Umb](https://img.shields.io/badge/Package-download-green.svg)](https://our.umbraco.org/projects/backoffice-extensions//)
 
 ## Configuration
+### Appsettings
 Step 1: Under appsettings, create a section called "IPRestrictor", with:
-- bool "Enabled", which enables and disables the 403 redirects
-- string "UmbracoPath", which will have a default value of "/umbraco"
-- string "RedirectUrl", which will have a default value of "/error-404"
-- bool "LogWhenBlocking", which will log 403 redirects if enabled. Default value is false.
-- bool "LogWhenNotBlocking", which is useful for debugging why users have not been blocked. Default value is false.
-- bool "LogXForwardedFor", which is useful for debugging why a particular IP isn't being categorised correctly. Default value is false.
-- string "DataDbDSNName", where you will put the key name of the database where whitelisted IPs are stored.
-  - Default value of "dataDbDSN"
-  - Can be changed to "umbracoDbDSN" if you only have the CMS database
+- bool `Enabled`, which enables and disables the 403 redirects
+- string `UmbracoPath`, which will have a default value of `"/umbraco"`
+- string `RedirectUrl`, which will have a default value of `"/error-404"`
+- bool `LogWhenBlocking`, which will log 403 redirects if enabled. Default value is `false`.
+- bool `LogWhenNotBlocking`, which is useful for debugging why users have not been blocked. Default value is `false`.
+- bool `LogXForwardedFor`, which is useful for debugging why a particular IP isn't being categorised correctly. Default value is `false`.
+- string `DataDbDSNName`, where you will put the key name of the database where whitelisted IPs are stored.
+  - Default value of `"dataDbDSN"`
+  - Can be changed to `"umbracoDbDSN"` if you only have the CMS database
 
+``` json
 "IPRestrictor": {
 	"Enabled": true,
 	"UmbracoPath": "/umbraco",
@@ -30,15 +32,19 @@ Step 1: Under appsettings, create a section called "IPRestrictor", with:
 	"LogXForwardedFor": true,
 	"DataDbDSNName": "umbracoDbDSN"
 }
+```
 
-Step 2: In the web-project Startup.cs file:
-- using Koben.IPRestrictor.Extensions;
-- In 'Configure(IApplicationBuilder app, IWebHostEnvironment env)':
-	- app.UseIPRestrictor();
+### Startup
+Step 2: In the web-project `Startup.cs` file:
+- `using Koben.IPRestrictor.Extensions;`;
+- In `Configure(IApplicationBuilder app, IWebHostEnvironment env)`:
+  - `app.UseIPRestrictor();`;
+
 
 ## Migration
 If the package is configured to use the umbracoDbDSN, the migration will run automatically
 If not, run the following script on your Data-DB to create the "WhiteListedIPs" table:
+``` sql
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -55,6 +61,7 @@ CREATE TABLE [dbo].[WhiteListedIPs](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+```
 
 ## Usage
 A new tab titled 'Restrict backoffice access' will be created on the Settings section. 
