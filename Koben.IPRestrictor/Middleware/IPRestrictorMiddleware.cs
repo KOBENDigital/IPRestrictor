@@ -1,5 +1,4 @@
 using Koben.IPRestrictor.Config;
-using Koben.IPRestrictor.Models;
 using Koben.IPRestrictor.Services.IpDataService.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -8,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Koben.IPRestrictor.Middleware
@@ -42,7 +42,16 @@ namespace Koben.IPRestrictor.Middleware
 					var umbracoPath = _iPRestrictorConfigService.Settings.UmbracoPath.TrimStart('~');
 					var requestedPath = context.Request.Path.ToString();
 
-					if (requestedPath.StartsWith(umbracoPath) && !requestedPath.ToLower().StartsWith($"{umbracoPath}/api") && !requestedPath.ToLower().StartsWith($"{umbracoPath}/surface"))
+					if 
+					(
+						Regex
+							.IsMatch
+							(
+								requestedPath, 
+								$@"^{umbracoPath}(?!/api/|/surface/)", 
+								RegexOptions.IgnoreCase
+							)
+						)
 					{
 						IPAddress hostIpAddress = null;
 						try
@@ -59,7 +68,7 @@ namespace Koben.IPRestrictor.Middleware
 
 							if (!whitelisted)
 							{
-								if (_iPRestrictorConfigService.Settings.LogEnabled)
+								if (_iPRestrictorConfigService.Settings.LogWhenBlocking)
 								{
 									_logger.LogInformation("IP: {hostIpAddress}, IsWhiteListedIp: {whitelisted}", hostIpAddress, whitelisted);
 								}
@@ -70,6 +79,10 @@ namespace Koben.IPRestrictor.Middleware
 
 								return;
 							}
+							else if (_iPRestrictorConfigService.Settings.LogWhenNotBlocking)
+							{
+								_logger.LogInformation("IP: {hostIpAddress}, IsWhiteListedIp: {whitelisted}", hostIpAddress, whitelisted);
+							};
 						}
 						catch (Exception ex)
 						{
@@ -112,7 +125,7 @@ namespace Koben.IPRestrictor.Middleware
 
 					var firstIpAddressWithoutAColon = string.Concat(ipAddresses.FirstOrDefault(x => !x.Contains(':'))?.Where(c => !char.IsWhiteSpace(c)) ?? Array.Empty<char>());
 
-					if (_iPRestrictorConfigService.Settings.LogEnabled)
+					if (_iPRestrictorConfigService.Settings.LogXForwardedFor)
 					{
 						_logger.LogInformation("X-Forwarded-For value: {0}", context
 							.Request
@@ -151,7 +164,15 @@ namespace Koben.IPRestrictor.Middleware
 			var whitelistedIps = GetIPAddressRanges().ToList();
 
 			//We add localhost to the whitelist
-			whitelistedIps.AddRange(new[] { new IPAddressRange(IPAddress.Parse("127.0.0.1")), new IPAddressRange(IPAddress.Parse("0.0.0.1"))});
+			whitelistedIps
+				.AddRange
+				(
+					new[] 
+					{ 
+						new IPAddressRange(IPAddress.Parse("127.0.0.1")), 
+						new IPAddressRange(IPAddress.Parse("0.0.0.1"))
+					}
+				);
 
 			return whitelistedIps.Any(x => x.Contains(ip.MapToIPv4()));
 		}

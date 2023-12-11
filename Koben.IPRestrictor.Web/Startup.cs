@@ -40,10 +40,10 @@ namespace Koben.IPRestrictor.Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddUmbraco(_env, _config)
-					.AddBackOffice()
-					.AddWebsite()
-					.AddComposers()
-					.Build();
+				.AddBackOffice()
+				.AddWebsite()
+				.AddComposers()
+				.Build();
 		}
 
 		/// <summary>
@@ -60,17 +60,17 @@ namespace Koben.IPRestrictor.Web
 
 			app.UseIPRestrictor();
 			app.UseUmbraco()
-					.WithMiddleware(u =>
-					{
-						u.UseBackOffice();
-						u.UseWebsite();
-					})
-					.WithEndpoints(u =>
-					{
-						u.UseInstallerEndpoints();
-						u.UseBackOfficeEndpoints();
-						u.UseWebsiteEndpoints();
-					});
+				.WithMiddleware(u =>
+				{
+					u.UseBackOffice();
+					u.UseWebsite();
+				})
+				.WithEndpoints(u =>
+				{
+					u.UseInstallerEndpoints();
+					u.UseBackOfficeEndpoints();
+					u.UseWebsiteEndpoints();
+				});
 		}
 	}
 }
