@@ -10,7 +10,7 @@ Umbraco package that allows to restrict ip-based access to the backoffice.
 [![Umb](https://img.shields.io/badge/Package-download-green.svg)](https://our.umbraco.org/projects/backoffice-extensions//)
 
 ## Configuration
-Under appsettings, create a section called "IPRestrictor", with:
+Step 1: Under appsettings, create a section called "IPRestrictor", with:
 - bool "Enabled", which enables and disables the 403 redirects
 - string "UmbracoPath", which will have a default value of "/umbraco"
 - string "RedirectUrl", which will have a default value of "/error-404"
@@ -30,6 +30,11 @@ Under appsettings, create a section called "IPRestrictor", with:
 	"LogXForwardedFor": true,
 	"DataDbDSNName": "umbracoDbDSN"
 }
+
+Step 2: In the web-project Startup.cs file:
+- using Koben.IPRestrictor.Extensions;
+- In 'Configure(IApplicationBuilder app, IWebHostEnvironment env)':
+	- app.UseIPRestrictor();
 
 ## Migration
 If the package is configured to use the umbracoDbDSN, the migration will run automatically
