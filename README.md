@@ -36,9 +36,9 @@ Step 1: Under appsettings, create a section called "IPRestrictor", with:
 
 ### Startup
 Step 2: In the web-project `Startup.cs` file:
-- `using Koben.IPRestrictor.Extensions;`;
+- `using Koben.IPRestrictor.Extensions;`
 - In `Configure(IApplicationBuilder app, IWebHostEnvironment env)`:
-  - `app.UseIPRestrictor();`;
+		`app.UseIPRestrictor();`
 
 
 ## Migration
