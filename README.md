@@ -14,7 +14,9 @@ Under appsettings, create a section called "IPRestrictor", with:
 - bool "Enabled", which enables and disables the 403 redirects
 - string "UmbracoPath", which will have a default value of "/umbraco"
 - string "RedirectUrl", which will have a default value of "/error-404"
-- bool "LogEnabled", which will log 403 redirects if enabled. Default value is false
+- bool "LogWhenBlocking", which will log 403 redirects if enabled. Default value is false.
+- bool "LogWhenNotBlocking", which is useful for debugging why users have not been blocked. Default value is false.
+- bool "LogXForwardedFor", which is useful for debugging why a particular IP isn't being categorised correctly. Default value is false.
 - string "DataDbDSNName", where you will put the key name of the database where whitelisted IPs are stored.
   - Default value of "dataDbDSN"
   - Can be changed to "umbracoDbDSN" if you only have the CMS database
@@ -23,7 +25,9 @@ Under appsettings, create a section called "IPRestrictor", with:
 	"Enabled": true,
 	"UmbracoPath": "/umbraco",
 	"RedirectUrl": "/error-404",
-	"LogEnabled": false,
+	"LogWhenBlocking": true,
+	"LogWhenNotBlocking": true,
+	"LogXForwardedFor": true,
 	"DataDbDSNName": "umbracoDbDSN"
 }
 
