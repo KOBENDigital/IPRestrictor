@@ -4,16 +4,14 @@
 	{
 		public const string IPRestrictorSection = "IPRestrictor";
 
-		internal const bool StaticEnabled = true;
-		internal const string StaticUmbracoPath = "/umbraco";
-		internal const string StaticRedirectUrl = "/error-404";
-		internal const bool StaticLogEnabled = false;
 		public const string StaticDataDbDsnName = "dataDbDSN";
 
-		public bool Enabled { get; set; } = StaticEnabled;
-		public string UmbracoPath { get; set; } = StaticUmbracoPath;
-		public string RedirectUrl { get; set; } = StaticRedirectUrl;
-		public bool LogEnabled { get; set; } = StaticLogEnabled;
+		public bool Enabled { get; set; } = true;
+		public string UmbracoPath { get; set; } = "/umbraco";
+		public string RedirectUrl { get; set; } = "/error-404";
+		public bool LogWhenBlocking { get; set; } = false;
+		public bool LogWhenNotBlocking { get; set; } = false;
+		public bool LogXForwardedFor { get; set; } = false;
 		public string DataDbDSNName { get; set; } = StaticDataDbDsnName;
 	}
 }

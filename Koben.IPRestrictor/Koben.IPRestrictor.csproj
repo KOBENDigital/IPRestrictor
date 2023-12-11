@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Version>2.7.2</Version>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Version>2.7.1</Version>
-  </PropertyGroup>
-
-  <ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="IPAddressRange" Version="4.2.0" />
 		<PackageReference Include="Koben.Persistence" Version="3.0.0" />
 		<PackageReference Include="Koben.Persistence.NPoco" Version="3.0.0" />
@@ -14,7 +13,7 @@
 		<PackageReference Include="Umbraco.Cms.Core" Version="11.2.2" />
 		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="11.2.2" />
 		<PackageReference Include="Umbraco.Cms.Web.Common" Version="11.2.2" />
-  </ItemGroup>
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="build\**\*.*">
