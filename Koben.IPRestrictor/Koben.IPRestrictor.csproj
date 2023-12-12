@@ -1,7 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
-		<Version>2.7.3</Version>
+		<Version>2.7.5</Version>
+		<Authors>Koben Digital Ltd</Authors>
+		<Company>Koben Digital Ltd</Company>
+		<PackageTags>Koben IPRestrictor</PackageTags>
+		<Description>Restrict Umbraco backoffice access to a whitelist of IPs</Description>
+		<PackageProjectUrl>https://github.com/KOBENDigital/IPRestrictor</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/KOBENDigital/IPRestrictor</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
