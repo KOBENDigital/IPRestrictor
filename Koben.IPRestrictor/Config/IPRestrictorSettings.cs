@@ -13,5 +13,6 @@
 		public bool LogWhenNotBlocking { get; set; } = false;
 		public bool LogXForwardedFor { get; set; } = false;
 		public string DataDbDSNName { get; set; } = StaticDataDbDsnName;
+		public string WhitelistedPathRegex { get; set; } = "(?!/[Ss]urface/)(?!/[Aa]pi/)(?!/[Ww]ebservices/)(?!/[Bb]ackoffice/)";
 	}
 }

@@ -48,7 +48,7 @@ namespace Koben.IPRestrictor.Middleware
 							.IsMatch
 							(
 								requestedPath, 
-								$@"^{umbracoPath}(?!/api/|/surface/)", 
+								$@"^{umbracoPath}{_iPRestrictorConfigService.Settings.WhitelistedPathRegex}", 
 								RegexOptions.IgnoreCase
 							)
 						)

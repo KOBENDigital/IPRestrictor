@@ -21,6 +21,8 @@ Step 1: Under appsettings, create a section called "IPRestrictor", with:
 - string `DataDbDSNName`, where you will put the key name of the database where whitelisted IPs are stored.
   - Default value of `"dataDbDSN"`
   - Can be changed to `"umbracoDbDSN"` if you only have the CMS database
+- string `WhitelistedPathRegex`, which controls which Umbraco paths (EG '/api') are whitelisted for all IPs
+	- Default value of `"(?!/[Ss]urface/)(?!/[Aa]pi/)(?!/[Ww]ebservices/)(?!/[Bb]ackoffice/)"`
 
 ``` json
 "IPRestrictor": {
@@ -30,7 +32,8 @@ Step 1: Under appsettings, create a section called "IPRestrictor", with:
 	"LogWhenBlocking": true,
 	"LogWhenNotBlocking": true,
 	"LogXForwardedFor": true,
-	"DataDbDSNName": "umbracoDbDSN"
+	"DataDbDSNName": "umbracoDbDSN",
+	"WhitelistedPathRegex": "(?!/[Ss]urface/)(?!/[Aa]pi/)(?!/[Ww]ebservices/)(?!/[Bb]ackoffice/)"
 }
 ```
 
