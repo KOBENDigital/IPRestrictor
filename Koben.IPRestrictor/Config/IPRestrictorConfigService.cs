@@ -6,7 +6,7 @@ namespace Koben.IPRestrictor.Config
 	{
 		public IPRestrictorSettings Settings => _settingsMonitor.CurrentValue;
 
-		private IOptionsMonitor<IPRestrictorSettings> _settingsMonitor;
+		private readonly IOptionsMonitor<IPRestrictorSettings> _settingsMonitor;
 
 		public IPRestrictorConfigService(IOptionsMonitor<IPRestrictorSettings> settingsOptionsMonitor)
 		{
