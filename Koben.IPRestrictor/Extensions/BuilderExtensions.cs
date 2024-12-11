@@ -2,8 +2,6 @@
 using Koben.IPRestrictor.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
 using Umbraco.Cms.Core.DependencyInjection;
 
 namespace Koben.IPRestrictor.Extensions

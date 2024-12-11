@@ -1,26 +1,24 @@
 ﻿using Koben.IPRestrictor.Models;
 using Koben.IPRestrictor.Services.IpDataService.Interfaces;
 using Koben.IPRestrictor.Services.IpDataService.Models;
-using Koben.Persistence.Interfaces;
+using Koben.ObjectMapping.Interfaces;
+using Koben.Persistence.NPoco.Interfaces;
 using NPoco;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Koben.IPRestrictor.Services.IpDataService
 {
-  internal class WhiteListedIpDataService : IWhiteListedIpDataService
+	internal class WhiteListedIpDataService : IWhiteListedIpDataService
 	{
 		private readonly IDatabaseProvider _dbProvider;
-		private readonly IDataModelMapper<WhiteListedIpPoco, WhiteListedIpDto> _modelMapper;
+		private readonly ITwoWayMapper<WhiteListedIpPoco, WhiteListedIpDto> _modelMapper;
 
-		public WhiteListedIpDataService(IDatabaseProvider dbProvider, IDataModelMapper<WhiteListedIpPoco, WhiteListedIpDto> modelMapper)
+		public WhiteListedIpDataService(IDatabaseProvider dbProvider, ITwoWayMapper<WhiteListedIpPoco, WhiteListedIpDto> modelMapper)
 		{
 			_dbProvider = dbProvider;
 			_modelMapper = modelMapper;
 		}
 
-		public IEnumerable<WhiteListedIpDto> GetAll()
+		public IEnumerable<WhiteListedIpDto>? GetAll()
 		{
 			using var db = _dbProvider.GetDatabase();
 
@@ -36,7 +34,7 @@ namespace Koben.IPRestrictor.Services.IpDataService
 			return mapped;
 		}
 
-		public WhiteListedIpDto Get(long id)
+		public WhiteListedIpDto? Get(long id)
 		{
 			using var db = _dbProvider.GetDatabase();
 
@@ -47,33 +45,47 @@ namespace Koben.IPRestrictor.Services.IpDataService
 			return mapped;
 		}
 
-		public Page<WhiteListedIpDto> Get(int pageNumber, int pageSize)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public WhiteListedIpDto Insert(WhiteListedIpDto model)
+		public long Insert(WhiteListedIpDto model)
 		{
 			using var db = _dbProvider.GetDatabase();
 
 			var id = Convert.ToInt32(db.Insert(_modelMapper.Map(model)));
 
-			return Get(id);
+			return id;
 		}
 
-		public IEnumerable<WhiteListedIpDto> Insert(IEnumerable<WhiteListedIpDto> models)
+		public WhiteListedIpDto InsertAndGet(WhiteListedIpDto model)
+		{
+			var id = Insert(model);
+
+			//suppressing as the only way this can be null is if the create method failed
+			return Get(id)!;
+		}
+
+		public IEnumerable<long> Insert(IEnumerable<WhiteListedIpDto> models)
 		{
 			return models.Select(Insert).ToList();
 		}
 
-		public WhiteListedIpDto Update(WhiteListedIpDto model)
+		public bool Update(WhiteListedIpDto model)
 		{
-			throw new System.NotImplementedException();
+			using var db = _dbProvider.GetDatabase();
+
+			var poco = _modelMapper.Map(model);
+
+			if (poco == null)
+			{
+				return false;
+			}
+
+			return db.Update(poco) > 0;
 		}
 
-		public IEnumerable<WhiteListedIpDto> Update(IEnumerable<WhiteListedIpDto> models)
+		public WhiteListedIpDto? UpdateAndGet(WhiteListedIpDto model)
 		{
-			throw new System.NotImplementedException();
+			var update = Update(model);
+
+			return update ? Get(model.Id) : null;
 		}
 
 		public bool Delete(long id)

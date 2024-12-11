@@ -4,6 +4,8 @@ using Koben.IPRestrictor.Models;
 using Koben.IPRestrictor.Services.IpDataService;
 using Koben.IPRestrictor.Services.IpDataService.Interfaces;
 using Koben.IPRestrictor.Services.IpDataService.Models;
+using Koben.ObjectMapping.Interfaces;
+using Koben.Persistence.NPoco.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core.Composing;
@@ -17,8 +19,8 @@ namespace Koben.IPRestrictor.Startup
 		{
 			var config = builder.Config;
 
-			builder.Services.AddSingleton<Koben.Persistence.Interfaces.IDataModelMapper<WhiteListedIpPoco, WhiteListedIpDto>, WhiteListedIpMapper>();
-			builder.Services.AddSingleton<Koben.Persistence.Interfaces.IDatabaseProvider>
+			builder.Services.AddSingleton<ITwoWayMapper<WhiteListedIpPoco, WhiteListedIpDto>, WhiteListedIpMapper>();
+			builder.Services.AddSingleton<IDatabaseProvider>
 			(x => 
 				new Koben.Persistence.NPoco.Persistence.SqlServerDatabaseProvider
 				(
