@@ -1,5 +1,6 @@
 # DEPRECATED
 This package has been deprecated as it is legacy and is no longer maintained.
+
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 # IPRestrictor
