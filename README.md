@@ -1,5 +1,11 @@
+# DEPRECATED
+This package has been deprecated as it is legacy and is no longer maintained.
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 # IPRestrictor
-Umbraco package that allows to restrict ip-based access to the backoffice.
+An Umbraco package that allows restricting access to the Backoffice based on a users IP address.
+
+**Please note:** the package should be installed and configured *after* Umbraco has been installed and database connection strings have been established.
 
 ## Installation
 
@@ -50,9 +56,8 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 }
 ```
 
-
 ## Migration
-If the package is configured to use the umbracoDbDSN, the migration will run automatically
+If the package is configured to use the umbracoDbDSN, the migration will run automatically.
 If not, run the following script on your Data-DB to create the "WhiteListedIPs" table:
 ``` sql
 SET ANSI_NULLS ON
@@ -74,25 +79,11 @@ GO
 ```
 
 ## Usage
-A new tab titled 'Restrict backoffice access' will be created on the Settings section. 
-To add a new ip just use the provided form. You can enter a range of addresses or only one address if you enter the same value in both inputs. Click the 'Add' button to add it to the list.
+A new tab titled 'Restrict Backoffice Access' will be created on the Settings section.  The form allows adding single or ranges of IP addresses.
 
-Don't forget to click 'Save' when you are happy with your whitelist.
+**Don't forget to click 'Save' when you are happy with your whitelist.**
 
-
-<img src="https://raw.githubusercontent.com/KOBENDigital/IPRestrictor/master/docs/settings-screen.png" width="300" alt="Add package" >
-
-
-The package includes an http module that checks the range of ips entered on the backoffice. The values are saved on the cache so the file is not continuosly read. If the client's ip is not whitelisted it returns a 403. It's up to you to manage that code.
-
-#### Dealing with the 403 code
-When the client ip is forbidden, the system will return a 403 error (forbidden). This returns a blank page. You can set up the page that the user will see following this docs:
- - [Letting Umbraco to deal with it](http://letswritecode.net/articles/how-to-setup-custom-error-pages-in-umbraco/)
- - [Letting IIS to deal with it](https://blog.mortenbock.dk/2017/02/03/error-page-setup-in-umbraco/)
-
+The package includes middleware that checks the range of IP addresses entered in the Backoffice. If the users IP is not whitelisted the browser returns a 404 and is redirected to the path specified on the `RedirectUrl` app setting property.
 
 ### Limitations
 Currently only working for IPv4
-
-## Releases
-V1.1 - Added CSV parser for better aliases support
